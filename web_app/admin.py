@@ -1,5 +1,5 @@
 from django.contrib import admin
-import models
+import web_app.models as models
 
 # Register your models here.
 admin.site.register(models.CustomUser)
