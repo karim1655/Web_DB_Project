@@ -4,9 +4,9 @@ from .models import CustomUser, TrainingPlan, Relazione
 
 
 class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
+    class Meta:
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + ('user_type',)
+        fields = ('username', 'first_name', 'last_name', 'email', 'user_type', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
