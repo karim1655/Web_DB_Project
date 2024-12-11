@@ -32,6 +32,9 @@ ALLOWED_HOSTS = []
 # Custom User
 AUTH_USER_MODEL = 'web_app.CustomUser'
 
+# Login redirect
+LOGIN_REDIRECT_URL = 'home'
+
 
 # Application definition
 
