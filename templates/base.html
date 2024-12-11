@@ -34,7 +34,7 @@
                     <!-- Login/Logout -->
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <span class="nav-link">Ciao, {{ user.username }}!</span>
+                            <a class="nav-link" href="{% url 'user_detail' user.id %}">Ciao, {{ user.first_name }}!</a>
                         </li>
                         <li class="nav-item">
                             <form method="POST" action="{% url 'logout' %}"> {% csrf_token %}

@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from .forms import CustomUserCreationForm
-
+from .models import CustomUser
 
 
 # Create your views here.
@@ -29,3 +30,7 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     template_name = 'registration/logged_out.html'
+
+class CustomUserDetailView(DetailView):
+    model = CustomUser
+    template_name = 'web_app/profile.html'
