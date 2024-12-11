@@ -31,18 +31,22 @@
                     <li class="nav-item">
                         <a class="nav-link" href="">Aggiungi Dati</a>
                     </li> -->
+                    <!-- Login/Logout -->
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <span class="nav-link">Ciao, {{ user.username }}!</span>
                         </li>
                         <li class="nav-item">
-                            <form method="POST" action="" class="d-inline"> {% csrf_token %}
+                            <form method="POST" action="{% url 'logout' %}"> {% csrf_token %}
                                 <button type="submit" class="btn btn-light">Logout</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="">Accedi</a>
+                            <a class="nav-link" href="{% url 'register' %}">Registrati</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Accedi</a>
                         </li>
                     {% endif %}
                 </ul>
