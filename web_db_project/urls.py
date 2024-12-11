@@ -28,4 +28,5 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(next_page='home'), name='logout'),
 
     path('userdetail/<pk>/', views.CustomUserDetailView.as_view(), name='user_detail'),
+    path('userupdate/<pk>/', views.CustomUserUpdateView.as_view(), name='user_update'),
 ]

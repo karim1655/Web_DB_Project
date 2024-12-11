@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm
 from .models import CustomUser
 
 
@@ -25,6 +26,7 @@ def register(request):
 
     return render(request, 'registration/register.html', {'form': form})
 
+
 class CustomLoginView(LoginView):
     template_name = 'registration/login.html'
 
@@ -33,4 +35,13 @@ class CustomLogoutView(LogoutView):
 
 class CustomUserDetailView(DetailView):
     model = CustomUser
-    template_name = 'web_app/profile.html'
+    template_name = 'web_app/user_detail.html'
+
+class CustomUserUpdateView(UpdateView):
+    model = CustomUser
+    template_name = 'web_app/user_update.html'
+    form_class = CustomUserUpdateForm
+
+    def get_success_url(self):
+        pk = self.get_context_data()["object"].pk
+        return reverse("user_detail", kwargs={'pk': pk})

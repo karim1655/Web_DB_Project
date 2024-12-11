@@ -4,12 +4,21 @@ from .models import CustomUser, TrainingPlan, Relazione
 
 
 class CustomUserCreationForm(UserCreationForm):
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'first_name', 'last_name', 'email', 'user_type', 'password1', 'password2')
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'user_type', )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['user_type'].label = "Registrati come"
 
+
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'first_name', 'last_name', 'email', 'user_type')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user_type'].label = "Cambia ruolo"
 

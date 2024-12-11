@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Modifica profilo{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Modifica profilo</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" class="bg-light p-4 rounded shadow-sm">
+                {% csrf_token %}
+
+                <!-- Bootstrap form styling -->
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+
+                <!-- Submit button -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-block">Conferma modifica</button>
+                    <a href="{% url 'user_detail' user.id %}" class="btn btn-secondary">Annulla</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
