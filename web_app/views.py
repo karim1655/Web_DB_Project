@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.contrib import messages
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm
 from .models import CustomUser
@@ -44,4 +45,6 @@ class CustomUserUpdateView(UpdateView):
 
     def get_success_url(self):
         pk = self.get_context_data()["object"].pk
+        request = self.request
+        messages.success(request, 'Account modificato con successo!')
         return reverse("user_detail", kwargs={'pk': pk})
