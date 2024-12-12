@@ -23,7 +23,8 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+
+                        <a class="btn btn-light" href="{% url 'home' %}">Home</a>
                     </li>
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="">Visualizza Dati</a>
@@ -34,19 +35,19 @@
                     <!-- Login/Logout -->
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'user_detail' user.id %}">Ciao, {{ user.first_name }}!</a>
+                            <a class="btn btn-light" href="{% url 'user_detail' user.id %}">Ciao, {{ user.first_name }}!</a>
                         </li>
                         <li class="nav-item">
                             <form method="POST" action="{% url 'logout' %}"> {% csrf_token %}
-                                <button type="submit" class="btn btn-light">Logout</button>
+                                <button type="submit" class="btn btn-outline-warning">Logout</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Registrati</a>
+                            <a class="btn btn-light" href="{% url 'register' %}">Registrati</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Accedi</a>
+                            <a class="btn btn-light" href="{% url 'login' %}">Accedi</a>
                         </li>
                     {% endif %}
                 </ul>
