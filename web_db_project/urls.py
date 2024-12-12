@@ -21,13 +21,14 @@ from web_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', views.home, name='home'),
-
     path('register/', views.register, name='register'),
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', views.CustomLogoutView.as_view(next_page='home'), name='logout'),
 
     path('userdetail/<int:pk>/', views.CustomUserDetailView.as_view(), name='user_detail'),
     path('userupdate/<int:pk>/', views.CustomUserUpdateView.as_view(), name='user_update'),
-    path('password_change/<int:pk>', views.CustomPasswordChangeView.as_view(), name='password_change'),
+    path('passwordchange/<int:pk>', views.CustomPasswordChangeView.as_view(), name='password_change'),
+
+    path('', views.home, name='home'),
+    path('trainingplans', views.TrainingPlansListView.as_view(), name='training_plans'),
 ]

@@ -3,11 +3,11 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm
-from .models import CustomUser
+from .models import CustomUser, TrainingPlan, Relazione
 
 
 # Create your views here.
@@ -59,3 +59,11 @@ class CustomPasswordChangeView(PasswordChangeView):
         request = self.request
         messages.success(request, 'Password modificata con successo!')
         return reverse("user_detail", kwargs={'pk': pk})
+
+
+class TrainingPlansListView(ListView):
+    model = TrainingPlan
+    template_name = "web_app/trainingplans_list.html"
+
+    def get_queryset(self):
+        return TrainingPlan.objects.order_by('-file_year')   # aggiungi course_n
