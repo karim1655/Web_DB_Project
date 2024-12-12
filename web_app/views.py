@@ -63,7 +63,25 @@ class CustomPasswordChangeView(PasswordChangeView):
 
 class TrainingPlansListView(ListView):
     model = TrainingPlan
-    template_name = "web_app/trainingplans_list.html"
+    template_name = "web_app/training_plans_list.html"
 
     def get_queryset(self):
         return TrainingPlan.objects.order_by('-file_year')   # aggiungi course_n
+
+
+def training_plan_detail(request, pk):
+    training_plan = get_object_or_404(TrainingPlan, pk=pk)
+
+    # Query per ottenere le relazioni associate al training plan
+    relazioni = Relazione.objects.filter(training_plan=training_plan)
+
+    # Suddivisione per stato
+    pianificato = relazioni.filter(stato='pianificato').select_related('user')
+    completato = relazioni.filter(stato='completato').select_related('user')
+
+    context = {
+        'training_plan': training_plan,
+        'pianificato_users': [rel.user for rel in pianificato],
+        'completato_users': [rel.user for rel in completato],
+    }
+    return render(request, 'web_app/training_plan_detail.html', context)

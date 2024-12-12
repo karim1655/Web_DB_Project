@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Dettaglio Piano di Formazione{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Intestazione della pagina -->
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div class="flex-grow-1" style="max-width: calc(100% - 150px);">
+                <h1 class="display-4 text-primary" style="white-space: normal; word-wrap: break-word;">{{ training_plan.course_n }} - {{ training_plan.course }}</h1>
+                <p class="lead text-muted">Dettaglio completo del piano di formazione</p>
+            </div>
+            <!-- Pulsante per tornare alla listview -->
+            <a href="{% url 'training_plans' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Torna alla lista
+            </a>
+        </div>
+
+        <!-- Dettagli del piano di formazione -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Anno File:</strong>
+                        <span class="badge bg-info">{{ training_plan.file_year }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Data Pianificata:</strong>
+                        <span class="badge bg-warning">{{ training_plan.planned_date }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Data Effettiva:</strong>
+                        <span class="badge bg-success">{{ training_plan.effective_date }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Durata:</strong>
+                        <span class="badge bg-light text-dark">{{ training_plan.duration }} ore</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Costo:</strong>
+                        <span class="badge bg-light text-dark">€{{ training_plan.cost }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Trainer:</strong>
+                        <span class="badge bg-primary">{{ training_plan.trainer }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Requisiti:</strong>
+                        <span class="badge bg-light text-dark">{{ training_plan.requirement }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sezione tabelle -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Pianificato</h3>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Utente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in pianificato_users %}
+                        <tr>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td>Nessun utente</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <h3>Completato</h3>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Utente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in completato_users %}
+                        <tr>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td>Nessun utente</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

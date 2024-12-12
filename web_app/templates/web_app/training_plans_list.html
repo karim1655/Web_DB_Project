@@ -12,22 +12,22 @@
 
     <div class="row">
         {% for training in object_list %}
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ training.course_n }} - {{ training.course }}</h5>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <!-- Card cliccabile -->
+                <a href="{% url 'training_plan_detail' training.id %}" class="card h-100 shadow-sm text-decoration-none">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-primary">{{ training.course_n }} - {{ training.course }}</h5>
                         <p class="card-text">
+                            Anno: {{ training.file_year }}<br>
                             Tipo: {{ training.type }}<br>
                             Data Pianificata: {{ training.planned_date|date:"d/m/Y" }}<br>
                             Data Effettiva: {{ training.effective_date|date:"d/m/Y" }}<br>
-                            Durata: {{ training.duration }} ore<br>
-                            Formatore: {{ training.trainer }}
                         </p>
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'training_detail' training.id %}" class="btn btn-primary">Visualizza Dettagli</a>
+                        <div class="mt-auto">
+                            <button class="btn btn-outline-dark w-100">Visualizza Dettagli</button>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         {% empty %}
             <div class="col-12 text-center">
