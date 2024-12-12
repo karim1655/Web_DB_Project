@@ -2,6 +2,11 @@ from django.core.management.base import BaseCommand
 import pyodbc
 from web_app.models import TrainingPlan
 
+"""
+Transfers entries from sql server table TrainingPlans to sqlite3 table (model) TrainingPlan. 
+"""
+
+
 class Command(BaseCommand):
     help = "Migra i dati dalla tabella SQL Server a SQLite3"
 
