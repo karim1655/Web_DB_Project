@@ -16,12 +16,12 @@
                 <!-- Card cliccabile -->
                 <a href="{% url 'training_plan_detail' training.id %}" class="card h-100 shadow-sm text-decoration-none">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-primary">{{ training.course_n }} - {{ training.course }}</h5>
+                        <h5 class="card-title text-primary"> {{ training.course_n }} - {{ training.course|truncatewords:20 }}</h5>
+
                         <p class="card-text">
-                            Anno: {{ training.file_year }}<br>
-                            Tipo: {{ training.type }}<br>
-                            Data Pianificata: {{ training.planned_date|date:"d/m/Y" }}<br>
-                            Data Effettiva: {{ training.effective_date|date:"d/m/Y" }}<br>
+                            Anno File: <span class="badge rounded-pill bg-info">{{ training.file_year }}</span><br>
+                            Data Pianificata: <span class="badge rounded-pill bg-warning">{{ training.planned_date|date:"d/m/Y" }}</span><br>
+                            Data Effettiva: <span class="badge rounded-pill bg-success">{{ training.effective_date|date:"d/m/Y" }}</span><br>
                         </p>
                         <div class="mt-auto">
                             <button class="btn btn-outline-dark w-100">Visualizza Dettagli</button>

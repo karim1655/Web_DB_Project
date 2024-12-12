@@ -7,7 +7,7 @@
         <!-- Intestazione della pagina -->
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div class="flex-grow-1" style="max-width: calc(100% - 150px);">
-                <h1 class="display-4 text-primary" style="white-space: normal; word-wrap: break-word;">{{ training_plan.course_n }} - {{ training_plan.course }}</h1>
+                <h2 class="display-4 text-primary" style="white-space: normal; word-wrap: break-word;">{{ training_plan.course_n }} - {{ training_plan.course }}</h2>
                 <p class="lead text-muted">Dettaglio completo del piano di formazione</p>
             </div>
             <!-- Pulsante per tornare alla listview -->
@@ -22,31 +22,55 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Anno File:</strong>
-                        <span class="badge bg-info">{{ training_plan.file_year }}</span>
+                        <span class="badge rounded-pill bg-info">{{ training_plan.file_year }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Data Pianificata:</strong>
-                        <span class="badge bg-warning">{{ training_plan.planned_date }}</span>
+                        <span class="badge rounded-pill bg-warning">{{ training_plan.planned_date }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Data Effettiva:</strong>
-                        <span class="badge bg-success">{{ training_plan.effective_date }}</span>
+                        <span class="badge rounded-pill bg-success">{{ training_plan.effective_date }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Anno effettivo:</strong>
+                        <span class="badge rounded-pill bg-info">{{ training_plan.effective_year }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Tipo:</strong>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.type }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Inizio:</strong>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.start }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Check Review:</strong>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.check_review }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Fine:</strong>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.end }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Durata:</strong>
-                        <span class="badge bg-light text-dark">{{ training_plan.duration }} ore</span>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.duration }} ore</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>Costo:</strong>
-                        <span class="badge bg-light text-dark">€{{ training_plan.cost }}</span>
+                        <strong>I/E:</strong>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.i_e }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Trainer:</strong>
-                        <span class="badge bg-primary">{{ training_plan.trainer }}</span>
+                        <span class="badge rounded-pill bg-dark">{{ training_plan.trainer }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Costo:</strong>
+                        <span class="badge rounded-pill bg-light text-dark">€{{ training_plan.cost }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Requisiti:</strong>
-                        <span class="badge bg-light text-dark">{{ training_plan.requirement }}</span>
+                        <span class="badge rounded-pill bg-light text-dark">{{ training_plan.requirement }}</span>
                     </li>
                 </ul>
             </div>
