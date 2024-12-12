@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanCreateForm
 from .models import CustomUser, TrainingPlan, Relazione
 
 
@@ -85,3 +85,12 @@ def training_plan_detail(request, pk):
         'completato_users': [rel.user for rel in completato],
     }
     return render(request, 'web_app/training_plan_detail.html', context)
+
+
+class TrainingPlanCreateView(CreateView):
+    model = TrainingPlan
+    form_class = TrainingPlanCreateForm
+    template_name = 'web_app/training_plan_create.html'
+
+    def get_success_url(self):
+        return reverse('training_plans')

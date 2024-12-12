@@ -22,3 +22,11 @@ class CustomUserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['user_type'].label = "Cambia ruolo"
 
+class TrainingPlanCreateForm(forms.ModelForm):
+    class Meta:
+        model = TrainingPlan
+        fields = '__all__'
+        widgets = {
+            'planned_date': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+            'effective_date': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+        }

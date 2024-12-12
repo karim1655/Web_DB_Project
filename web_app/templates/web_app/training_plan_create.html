@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Aggiungi Corso{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Aggiungi Corso</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" class="bg-light p-4 rounded shadow-sm" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Bootstrap form styling -->
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+
+                <!-- Submit button -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-block">Conferma</button>
+                    <a href="{% url 'training_plans' %}" class="btn btn-secondary">Annulla</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Sfondo chiaro e testo scuro per il chooser dei mesi */
+    .flatpickr-months .flatpickr-monthDropdown-months {
+        background-color: #f8f9fa !important; /* Sfondo chiaro */
+        color: #212529 !important; /* Testo scuro */
+    }
+
+    /* Bordo visibile per il menu a discesa */
+    .flatpickr-months .flatpickr-monthDropdown-months:focus {
+        border: 1px solid #007bff !important; /* Bordo blu */
+        outline: none;
+    }
+
+    /* Stile degli elementi del menu a discesa */
+    .flatpickr-months .flatpickr-monthDropdown-months option {
+        background-color: #ffffff; /* Sfondo bianco */
+        color: #212529; /* Testo scuro */
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inizializza Flatpickr sui campi datetime
+        flatpickr("input[type='datetime-local']", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+    });
+</script>
+
+{% endblock %}
