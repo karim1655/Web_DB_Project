@@ -54,4 +54,4 @@ class Relazione(models.Model):
     class Meta:
         verbose_name = "Relazione"
         verbose_name_plural = "Relazioni"
-        unique_together = ('training_plan', 'user')
+        unique_together = ('training_plan', 'user', 'stato')
