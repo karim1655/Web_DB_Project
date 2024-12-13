@@ -6,11 +6,12 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm, UpdateRelazioneForm
 from .models import CustomUser, TrainingPlan, Relazione
 
 
 # Create your views here.
+
 def home(request):
     return render(request, 'web_app/home.html', context={'title': 'Home', })
 
@@ -116,3 +117,88 @@ class TrainingPlanDeleteView(DeleteView):
     def get_success_url(self):
         messages.success(self.request, 'Corso eliminato con successo!')
         return reverse('training_plans')
+
+
+def planned_update(request, pk):
+    persone = CustomUser.objects.filter(user_type='persona')
+
+    training_plan = get_object_or_404(TrainingPlan, pk=pk)
+
+    # Ottieni tutti gli utenti già associati come "pianificati"
+    utenti_in_relazione = Relazione.objects.filter(
+        training_plan=training_plan, stato='pianificato'
+    ).values_list('user_id', flat=True)
+
+    if request.method == "POST":
+        form = UpdateRelazioneForm(request.POST)
+        if form.is_valid():
+            # Ottieni gli utenti selezionati dal form
+            users_selected = form.cleaned_data['users']
+
+            # Aggiungi utenti nuovi (che non sono già in relazione)
+            for user in users_selected:
+                if not Relazione.objects.filter(
+                    training_plan=training_plan, user=user, stato='pianificato'
+                ).exists():
+                    Relazione.objects.create(
+                        training_plan=training_plan, user=user, stato='pianificato'
+                    )
+
+            # Rimuovi utenti deselezionati (che sono in relazione ma non nel form)
+            for user_id in utenti_in_relazione:
+                if user_id not in [user.id for user in users_selected]:
+                    Relazione.objects.filter(
+                        training_plan=training_plan, user_id=user_id, stato='pianificato'
+                    ).delete()
+
+            messages.success(request, 'Utenti pianificati modificati con successo!')
+
+            return redirect('training_plan_detail', pk=training_plan.pk)
+    else:
+        # Precompila il form con gli utenti selezionati
+        form = UpdateRelazioneForm(initial={'users': utenti_in_relazione})
+
+    return render(request, 'web_app/planned_update.html', {'form': form, 'training_plan': training_plan, 'persone': persone})
+
+
+def completed_update(request, pk):
+    persone = CustomUser.objects.filter(user_type='persona')
+
+    training_plan = get_object_or_404(TrainingPlan, pk=pk)
+
+    # Ottieni tutti gli utenti già associati come "completati"
+    utenti_in_relazione = Relazione.objects.filter(
+        training_plan=training_plan, stato='completato'
+    ).values_list('user_id', flat=True)
+
+    if request.method == "POST":
+        form = UpdateRelazioneForm(request.POST)
+        if form.is_valid():
+            # Ottieni gli utenti selezionati dal form
+            users_selected = form.cleaned_data['users']
+
+            # Aggiungi utenti nuovi (che non sono già in relazione)
+            for user in users_selected:
+                if not Relazione.objects.filter(
+                    training_plan=training_plan, user=user, stato='completato'
+                ).exists():
+                    Relazione.objects.create(
+                        training_plan=training_plan, user=user, stato='completato'
+                    )
+
+            # Rimuovi utenti deselezionati (che sono in relazione ma non nel form)
+            for user_id in utenti_in_relazione:
+                if user_id not in [user.id for user in users_selected]:
+                    Relazione.objects.filter(
+                        training_plan=training_plan, user_id=user_id, stato='completato'
+                    ).delete()
+
+            messages.success(request, 'Utenti completati modificati con successo!')
+
+            return redirect('training_plan_detail', pk=training_plan.pk)
+    else:
+        # Ottieni il queryset degli utenti già associati come "completati"
+        utenti_selezionati_qs = CustomUser.objects.filter(id__in=utenti_in_relazione)
+        form = UpdateRelazioneForm(initial={"users": utenti_selezionati_qs})
+
+    return render(request, 'web_app/completed_update.html', {'form': form, 'training_plan': training_plan, 'persone': persone})

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Aggiorna Completato</h2>
+<br>
+  <form method="post">
+    {% csrf_token %}
+     {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}">
+          {% for user in persone %}
+            <input type="checkbox" name="{{ field.name }}" value="{{ user.id }}" {% if user.id in field.value %} checked {% endif %}>
+            {{ user.first_name }} {{ user.last_name }}<br>
+          {% endfor %}
+        </label>
+      </div>
+    {% endfor %}
+  <br><br>
+
+    <button type="submit" class="btn btn-primary">Aggiorna</button>
+    <a href="{% url 'training_plan_detail' training_plan.pk %}" class="btn btn-secondary">Annulla</a>
+  </form>
+
+{% endblock %}

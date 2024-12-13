@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
 from .models import CustomUser, TrainingPlan, Relazione
 
 
@@ -30,3 +31,10 @@ class TrainingPlanForm(forms.ModelForm):
             'planned_date': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
             'effective_date': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
         }
+
+class UpdateRelazioneForm(forms.Form):
+    users = forms.ModelMultipleChoiceField(
+        queryset=get_user_model().objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
