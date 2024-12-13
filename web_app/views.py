@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanCreateForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm
 from .models import CustomUser, TrainingPlan, Relazione
 
 
@@ -89,8 +89,30 @@ def training_plan_detail(request, pk):
 
 class TrainingPlanCreateView(CreateView):
     model = TrainingPlan
-    form_class = TrainingPlanCreateForm
+    form_class = TrainingPlanForm
     template_name = 'web_app/training_plan_create.html'
 
+
     def get_success_url(self):
+        messages.success(self.request, 'Corso creato con successo!')
+        return reverse('training_plans')
+
+
+class TrainingPlanUpdateView(UpdateView):
+    model = TrainingPlan
+    form_class = TrainingPlanForm
+    template_name = 'web_app/training_plan_update.html'
+
+    def get_success_url(self):
+        pk = self.kwargs.get("pk")
+        messages.success(self.request, 'Corso modificato con successo!')
+        return reverse('training_plan_detail', kwargs={'pk': pk})
+
+
+class TrainingPlanDeleteView(DeleteView):
+    model = TrainingPlan
+    template_name = 'web_app/training_plan_delete.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Corso eliminato con successo!')
         return reverse('training_plans')

@@ -1,26 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Dettaglio Piano di Formazione{% endblock %}
+{% block title %}Dettaglio Corso{% endblock %}
 
 {% block content %}
     <div class="container">
         <!-- Intestazione della pagina -->
         <div class="d-flex justify-content-between align-items-start mb-4">
-    <div class="flex-grow-1" style="max-width: calc(100% - 150px);">
-        <!-- Titolo ancora più grande, grassetto e con una dimensione controllata -->
-        <h3 class="font-weight-bold" style="white-space: normal; word-wrap: break-word; color: rgb(0, 71, 171); font-size: 3rem;">
-            {{ training_plan.course_n }} - {{ training_plan.course }}
-        </h3>
-        <p class="lead text-muted">Dettaglio completo del piano di formazione</p>
-    </div>
-    <!-- Pulsante per tornare alla listview -->
-    <a href="{% url 'training_plans' %}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left-circle"></i> Torna alla lista
-    </a>
-</div>
+            <div class="flex-grow-1" style="max-width: calc(100% - 150px);">
+                <!-- Titolo ancora più grande, grassetto e con una dimensione controllata -->
+                <h3 class="font-weight-bold" style="white-space: normal; word-wrap: break-word; color: rgb(0, 71, 171); font-size: 3rem;">
+                    {{ training_plan.course_n }} - {{ training_plan.course }}
+                </h3>
+            </div>
+            <!-- Pulsante per tornare alla listview -->
+            <a href="{% url 'training_plans' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Torna alla lista
+            </a>
+        </div>
 
+        <!-- Pulsanti modifica ed elimina corso -->
+        <div class="mb-4">
+            <a href="{% url 'training_plan_update' training_plan.id %}" class="btn btn-primary me-2">
+                <i class="bi bi-pencil"></i> Modifica Corso
+            </a>
+            <a href="{% url 'training_plan_delete' training_plan.id %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Elimina Corso
+            </a>
+        </div>
 
-        <!-- Dettagli del piano di formazione -->
+        <!-- Dettagli del corso -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <ul class="list-group list-group-flush">
@@ -70,7 +78,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Costo:</strong>
-                        <span class="badge rounded-pill bg-light text-dark">€{{ training_plan.cost }}</span>
+                        <span class="badge rounded-pill bg-light text-dark">&euro; {{ training_plan.cost }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Requisiti:</strong>
