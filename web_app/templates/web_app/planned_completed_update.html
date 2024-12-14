@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
+{% block title %} {{ title }} {% endblock %}
+
 {% block content %}
-  <h2>Aggiorna Completato</h2>
+  <h2>{{ title }}</h2>
 <br>
   <form method="post">
     {% csrf_token %}
-     {% for field in form %}
+    {% for field in form %}
       <div>
         <label for="{{ field.id_for_label }}">
           {% for user in persone %}
