@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm, UpdateRelazioneForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm, UpdateRelazioneForm, SearchForm
 from .models import CustomUser, TrainingPlan, Relazione
 
 
@@ -164,3 +164,64 @@ def planned_completed_update(request, pk):
         form = UpdateRelazioneForm(initial={'users': utenti_in_relazione})
 
     return render(request, 'web_app/planned_completed_update.html', {'form': form, 'training_plan': training_plan, 'persone': users, 'title': f'Aggiorna {stato_corrente}'})
+
+
+def search(request):
+    ctx = None
+
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            course_n = form.cleaned_data.get("course_n")
+            course = form.cleaned_data.get("course")
+            year = form.cleaned_data.get("year")
+            planned_date = form.cleaned_data.get("planned_date")
+            effective_date = form.cleaned_data.get("effective_date")
+            type = form.cleaned_data.get("type")
+            start = form.cleaned_data.get("start")
+            check_review = form.cleaned_data.get("check_review")
+            end = form.cleaned_data.get("end")
+            duration = form.cleaned_data.get("duration")
+            i_e = form.cleaned_data.get("i_e")
+            trainer = form.cleaned_data.get("trainer")
+            cost = form.cleaned_data.get("cost")
+            requirement = form.cleaned_data.get("requirement")
+
+            training_plans = TrainingPlan.objects.all()
+            if course_n:
+                training_plans = training_plans.filter(course_n__iexact=course_n)
+            if course:
+                training_plans = training_plans.filter(course__icontains=course)
+            if year:
+                training_plans = training_plans.filter(year__iexact=year)
+            if planned_date:
+                training_plans = training_plans.filter(planned_date__icontains=planned_date)
+            if effective_date:
+                training_plans = training_plans.filter(effective_date__icontains=effective_date)
+            if type:
+                training_plans = training_plans.filter(type__iexact=type)
+            if start:
+                training_plans = training_plans.filter(start__icontains=start)
+            if check_review:
+                training_plans = training_plans.filter(check_review__icontains=check_review)
+            if end:
+                training_plans = training_plans.filter(end__icontains=end)
+            if duration:
+                training_plans = training_plans.filter(duration__lte=duration)
+            if i_e:
+                training_plans = training_plans.filter(i_e__iexact=i_e)
+            if trainer:
+                training_plans = training_plans.filter(trainer__icontains=trainer)
+            if cost:
+                training_plans = training_plans.filter(cost__lte=cost)
+            if requirement:
+                training_plans = training_plans.filter(requirement__icontains=requirement)
+
+            training_plans = training_plans.order_by("-year")
+
+            ctx = {
+                'form': form,
+                'training_plans': training_plans,
+            }
+
+    return render(request, 'web_app/search.html', ctx)

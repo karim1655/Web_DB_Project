@@ -39,4 +39,6 @@ urlpatterns = [
 
     path('trainingplanupdate/<int:pk>/plannedupdate', views.planned_completed_update, name='planned_update'),
     path('trainingplanupdate/<int:pk>/completedupdate', views.planned_completed_update, name='completed_update'),
+
+    path('search', views.search, name='search'),
 ]

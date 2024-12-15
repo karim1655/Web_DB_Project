@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Lista Corsi{% endblock %}
+{% block title %}Corsi Disponibili{% endblock %}
 
 {% block content %}
 <div class="container my-5">
@@ -9,7 +9,7 @@
         <!-- Pulsanti allineati a destra -->
         <div class="d-flex justify-content-end w-50">
             <a href="{% url 'training_plan_create' %}" class="btn btn-primary ms-2">Aggiungi corso</a>
-            <a href="" class="btn btn-success ms-2">Cerca</a>
+            <a href="{% url 'search' %}" class="btn btn-success ms-2">Cerca</a>
         </div>
     </div>
 
