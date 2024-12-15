@@ -14,17 +14,17 @@
         <div class="row g-3">
 
             <div class="col-md-3">
-                <label for="id_course_n" class="form-label">Numero Corso</label>
-                <input type="number" name="course_n" class="form-control form-control-sm" id="id_course_n" placeholder="Num. Corso" value="{{ form.course_n.value|default_if_none:'' }}">
+                <label for="id_course_n" class="form-label"><strong>Numero Corso</strong></label>
+                <input type="number" name="course_n" class="form-control form-control-sm" id="id_course_n" value="{{ form.course_n.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_course" class="form-label">Nome Corso</label>
-                <input type="text" name="course" class="form-control form-control-sm" id="id_course" maxlength="200" placeholder="Nome Corso" value="{{ form.course.value|default_if_none:'' }}">
+                <label for="id_course" class="form-label"><strong>Nome Corso</strong></label>
+                <input type="text" name="course" class="form-control form-control-sm" id="id_course" maxlength="200" value="{{ form.course.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_year" class="form-label">Anno</label>
+                <label for="id_year" class="form-label"><strong>Anno</strong></label>
                 <select name="year" class="form-select form-select-sm" id="id_year">
                     {% for value, label in form.fields.year.choices %}
                         <option value="{{ value }}" {% if form.year.value == value %}selected{% endif %}>{{ label }}</option>
@@ -33,7 +33,7 @@
             </div>
 
             <div class="col-md-3">
-                <label for="id_type" class="form-label">Tipo</label>
+                <label for="id_type" class="form-label"><strong>Tipo</strong></label>
                 <select name="type" class="form-select form-select-sm" id="id_type">
                     {% for value, label in form.fields.type.choices %}
                         <option value="{{ value }}" {% if form.type.value == value %}selected{% endif %}>{{ label }}</option>
@@ -42,37 +42,37 @@
             </div>
 
             <div class="col-md-3">
-                <label for="id_planned_date" class="form-label">Data Pianificata</label>
+                <label for="id_planned_date" class="form-label"><strong>Data Pianificata</strong></label>
                 <input type="date" name="planned_date" class="form-control form-control-sm" id="id_planned_date" value="{{ form.planned_date.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_effective_date" class="form-label">Data Effettiva</label>
+                <label for="id_effective_date" class="form-label"><strong>Data Effettiva</strong></label>
                 <input type="date" name="effective_date" class="form-control form-control-sm" id="id_effective_date" value="{{ form.effective_date.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_start" class="form-label">Inizio</label>
-                <input type="text" name="start" class="form-control form-control-sm" id="id_start" maxlength="200" placeholder="Inizio" value="{{ form.start.value|default_if_none:'' }}">
+                <label for="id_start" class="form-label"><strong>Inizio</strong></label>
+                <input type="text" name="start" class="form-control form-control-sm" id="id_start" maxlength="200" value="{{ form.start.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_check_review" class="form-label">Check Review</label>
-                <input type="text" name="check_review" class="form-control form-control-sm" id="id_check_review" maxlength="200" placeholder="Check Review" value="{{ form.check_review.value|default_if_none:'' }}">
+                <label for="id_check_review" class="form-label"><strong>Check Review</strong></label>
+                <input type="text" name="check_review" class="form-control form-control-sm" id="id_check_review" maxlength="200" value="{{ form.check_review.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_end" class="form-label">Fine</label>
-                <input type="text" name="end" class="form-control form-control-sm" id="id_end" maxlength="200" placeholder="Fine" value="{{ form.end.value|default_if_none:'' }}">
+                <label for="id_end" class="form-label"><strong>Fine</strong></label>
+                <input type="text" name="end" class="form-control form-control-sm" id="id_end" maxlength="200" value="{{ form.end.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_duration" class="form-label">Durata (ore)</label>
-                <input type="number" name="duration" class="form-control form-control-sm" id="id_duration" step="0.01" placeholder="Durata" value="{{ form.duration.value|default_if_none:'' }}">
+                <label for="id_duration" class="form-label"><strong>Durata (ore)</strong></label>
+                <input type="number" name="duration" class="form-control form-control-sm" id="id_duration" step="0.01" value="{{ form.duration.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_i_e" class="form-label">I/E</label>
+                <label for="id_i_e" class="form-label"><strong>I/E</strong></label>
                 <select name="i_e" class="form-select form-select-sm" id="id_i_e">
                     {% for value, label in form.fields.i_e.choices %}
                         <option value="{{ value }}" {% if form.i_e.value == value %}selected{% endif %}>{{ label }}</option>
@@ -81,18 +81,18 @@
             </div>
 
             <div class="col-md-3">
-                <label for="id_trainer" class="form-label">Trainer</label>
-                <input type="text" name="trainer" class="form-control form-control-sm" id="id_trainer" maxlength="200" placeholder="Trainer" value="{{ form.trainer.value|default_if_none:'' }}">
+                <label for="id_trainer" class="form-label"><strong>Trainer</strong></label>
+                <input type="text" name="trainer" class="form-control form-control-sm" id="id_trainer" maxlength="200" value="{{ form.trainer.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_cost" class="form-label">Costo (€)</label>
-                <input type="number" name="cost" class="form-control form-control-sm" id="id_cost" step="0.01" placeholder="Costo" value="{{ form.cost.value|default_if_none:'' }}">
+                <label for="id_cost" class="form-label"><strong>Costo (€)</strong></label>
+                <input type="number" name="cost" class="form-control form-control-sm" id="id_cost" step="0.01" value="{{ form.cost.value|default_if_none:'' }}">
             </div>
 
             <div class="col-md-3">
-                <label for="id_requirement" class="form-label">Requisiti</label>
-                <input type="text" name="requirement" class="form-control form-control-sm" id="id_requirement" maxlength="200" placeholder="Requisiti" value="{{ form.requirement.value|default_if_none:'' }}">
+                <label for="id_requirement" class="form-label"><strong>Requisiti</strong></label>
+                <input type="text" name="requirement" class="form-control form-control-sm" id="id_requirement" maxlength="200" value="{{ form.requirement.value|default_if_none:'' }}">
             </div>
         </div>
 
