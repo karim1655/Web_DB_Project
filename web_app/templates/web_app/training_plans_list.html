@@ -22,7 +22,7 @@
                         <h5 class="card-title" style="color: rgb(0, 71, 171);"> {{ training.course_n }} - {{ training.course|truncatewords:10 }}</h5>
 
                         <p class="card-text">
-                            Anno File: <span class="badge rounded-pill bg-info">{{ training.file_year }}</span><br>
+                            Anno: <span class="badge rounded-pill bg-info">{{ training.year }}</span><br>
                             Data Pianificata: <span class="badge rounded-pill bg-warning">{{ training.planned_date|date:"d/m/Y" }}</span><br>
                             Data Effettiva: <span class="badge rounded-pill bg-success">{{ training.effective_date|date:"d/m/Y" }}</span><br>
                         </p>

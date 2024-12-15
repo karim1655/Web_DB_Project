@@ -14,12 +14,11 @@ class CustomUser(AbstractUser):
 
 
 class TrainingPlan(models.Model):
-    file_year = models.IntegerField(null=True, blank=True)
+    year = models.IntegerField(null=True, blank=True)
     course_n = models.CharField(max_length=255, null=True, blank=True)
     course = models.TextField(null=True, blank=True)
     planned_date = models.DateTimeField(null=True, blank=True)
     effective_date = models.DateTimeField(null=True, blank=True)
-    effective_year = models.IntegerField(null=True, blank=True)
     type = models.CharField(max_length=255, null=True, blank=True)
     start = models.CharField(max_length=255, null=True, blank=True)
     check_review = models.CharField(max_length=255, null=True, blank=True)

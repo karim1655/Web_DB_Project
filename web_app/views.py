@@ -67,7 +67,7 @@ class TrainingPlansListView(ListView):
     template_name = "web_app/training_plans_list.html"
 
     def get_queryset(self):
-        return TrainingPlan.objects.order_by('-file_year')   # aggiungi course_n
+        return TrainingPlan.objects.order_by('-year')   # aggiungi course_n
 
 
 def training_plan_detail(request, pk):
