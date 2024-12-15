@@ -13,28 +13,41 @@
         </div>
     </div>
 
-    <div class="row">
-        {% for training in object_list %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <!-- Card cliccabile -->
-                <a href="{% url 'training_plan_detail' training.id %}" class="card h-100 shadow-sm text-decoration-none">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title" style="color: rgb(0, 71, 171);"> {{ training.course_n }} - {{ training.course|truncatewords:10 }}</h5>
-
-                        <p class="card-text">
-                            Anno: <span class="badge rounded-pill bg-info">{{ training.year }}</span><br>
-                            Data Pianificata: <span class="badge rounded-pill bg-warning">{{ training.planned_date|date:'d-m-Y, H:i' }}</span><br>
-                            Data Effettiva: <span class="badge rounded-pill bg-success">{{ training.effective_date|date:'d-m-Y, H:i' }}</span><br>
-                        </p>
-                        <div class="mt-auto">
-                            <button class="btn btn-outline-dark w-100">Visualizza Dettagli</button>
+    {% regroup object_list|dictsortreversed:"year" by year as courses_by_year %}
+    <div class="accordion" id="coursesAccordion">
+        {% for group in courses_by_year %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-{{ group.grouper }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ group.grouper }}" aria-expanded="false" aria-controls="collapse-{{ group.grouper }}">
+                        Anno: {{ group.grouper }}
+                    </button>
+                </h2>
+                <div id="collapse-{{ group.grouper }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ group.grouper }}" data-bs-parent="#coursesAccordion">
+                    <div class="accordion-body">
+                        <div class="row">
+                            {% for training in group.list %}
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                    <!-- Card cliccabile -->
+                                    <a href="{% url 'training_plan_detail' training.id %}" class="card h-100 shadow-sm text-decoration-none">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title" style="color: rgb(0, 71, 171);">
+                                                {{ training.course_n }} - {{ training.course|truncatewords:10 }}
+                                            </h5>
+                                            <p class="card-text">
+                                                Anno: <span class="badge rounded-pill bg-info">{{ training.year }}</span><br>
+                                                Data Pianificata: <span class="badge rounded-pill bg-warning">{{ training.planned_date|date:'d-m-Y, H:i' }}</span><br>
+                                                Data Effettiva: <span class="badge rounded-pill bg-success">{{ training.effective_date|date:'d-m-Y, H:i' }}</span><br>
+                                            </p>
+                                            <div class="mt-auto">
+                                                <button class="btn btn-outline-dark w-100">Visualizza Dettagli</button>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
-                </a>
-            </div>
-        {% empty %}
-            <div class="col-12 text-center">
-                <p class="text-muted">Non ci sono corsi disponibili al momento.</p>
+                </div>
             </div>
         {% endfor %}
     </div>
