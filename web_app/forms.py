@@ -47,8 +47,8 @@ class SearchForm(forms.Form):
         choices= [],
         label="Anno"
     )
-    planned_date = forms.DateTimeField(required=False)
-    effective_date = forms.DateTimeField(required=False)
+    planned_date = forms.DateField(required=False)
+    effective_date = forms.DateField(required=False)
     type = forms.ChoiceField(
         choices=[],
         required=False,

@@ -195,9 +195,9 @@ def search(request):
             if year:
                 training_plans = training_plans.filter(year__iexact=year)
             if planned_date:
-                training_plans = training_plans.filter(planned_date__icontains=planned_date)
+                training_plans = training_plans.filter(planned_date__date=planned_date)
             if effective_date:
-                training_plans = training_plans.filter(effective_date__icontains=effective_date)
+                training_plans = training_plans.filter(effective_date__date=effective_date)
             if type:
                 training_plans = training_plans.filter(type__iexact=type)
             if start:

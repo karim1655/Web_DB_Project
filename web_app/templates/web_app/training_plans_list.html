@@ -23,8 +23,8 @@
 
                         <p class="card-text">
                             Anno: <span class="badge rounded-pill bg-info">{{ training.year }}</span><br>
-                            Data Pianificata: <span class="badge rounded-pill bg-warning">{{ training.planned_date|date:"d/m/Y" }}</span><br>
-                            Data Effettiva: <span class="badge rounded-pill bg-success">{{ training.effective_date|date:"d/m/Y" }}</span><br>
+                            Data Pianificata: <span class="badge rounded-pill bg-warning">{{ training.planned_date|date:'d-m-Y, H:i' }}</span><br>
+                            Data Effettiva: <span class="badge rounded-pill bg-success">{{ training.effective_date|date:'d-m-Y, H:i' }}</span><br>
                         </p>
                         <div class="mt-auto">
                             <button class="btn btn-outline-dark w-100">Visualizza Dettagli</button>
