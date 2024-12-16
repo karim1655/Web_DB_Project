@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import CustomUser, TrainingPlan, Relazione
+from .models import CustomUser, Course, Relazione
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -25,7 +25,7 @@ class CustomUserUpdateForm(forms.ModelForm):
 
 class TrainingPlanForm(forms.ModelForm):
     class Meta:
-        model = TrainingPlan
+        model = Course
         fields = '__all__'
         widgets = {
             'planned_date': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
@@ -71,12 +71,12 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         # Serve str() perché se no fallisce "if form.year.value == value" nel template, siccome form.year.value è una stringa e year è un intero
-        year_choices = [(str(year), year) for year in TrainingPlan.objects.all().values_list("year", flat=True).distinct().order_by("-year").exclude(year__isnull=True)]
+        year_choices = [(str(year), year) for year in Course.objects.all().values_list("year", flat=True).distinct().order_by("-year").exclude(year__isnull=True)]
         self.fields['year'].choices = [("", "Tutti")] + year_choices
 
-        type_choices = [(type, type) for type in TrainingPlan.objects.all().values_list("type", flat=True).distinct().exclude(type__isnull=True)]
+        type_choices = [(type, type) for type in Course.objects.all().values_list("type", flat=True).distinct().exclude(type__isnull=True)]
         self.fields['type'].choices = [("", "Tutti")] + type_choices
 
-        i_e_choices = [(i_e, i_e) for i_e in TrainingPlan.objects.all().values_list("i_e", flat=True).distinct().exclude(i_e__isnull=True)]
+        i_e_choices = [(i_e, i_e) for i_e in Course.objects.all().values_list("i_e", flat=True).distinct().exclude(i_e__isnull=True)]
         self.fields['i_e'].choices = [("", "Tutti")] + i_e_choices
 

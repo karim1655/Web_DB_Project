@@ -7,15 +7,15 @@ from django.views.generic import CreateView, DetailView, UpdateView, DeleteView,
 from django.contrib import messages
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm, UpdateRelazioneForm, SearchForm
-from .models import CustomUser, TrainingPlan, Relazione
+from .models import CustomUser, Course, Relazione
 
 
 # Create your views here.
 
 def home(request):
     if request.user.is_authenticated:
-        planned = TrainingPlan.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="pianificato").order_by('-effective_date', '-planned_date')
-        completed = TrainingPlan.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="completato").order_by('-effective_date', '-planned_date')
+        planned = Course.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="pianificato").order_by('-effective_date', '-planned_date')
+        completed = Course.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="completato").order_by('-effective_date', '-planned_date')
     else:
         planned = None
         completed = None
@@ -71,18 +71,18 @@ class CustomPasswordChangeView(PasswordChangeView):
 
 
 class TrainingPlansListView(ListView):
-    model = TrainingPlan
+    model = Course
     template_name = "web_app/training_plans_list.html"
 
     def get_queryset(self):
-        return TrainingPlan.objects.order_by('-year', '-effective_date', '-planned_date')
+        return Course.objects.order_by('-year', '-effective_date', '-planned_date')
 
 
 def training_plan_detail(request, pk):
-    training_plan = get_object_or_404(TrainingPlan, pk=pk)
+    training_plan = get_object_or_404(Course, pk=pk)
 
     # Query per ottenere le relazioni associate al training plan
-    relazioni = Relazione.objects.filter(training_plan=training_plan)
+    relazioni = Relazione.objects.filter(course=training_plan)
 
     # Suddivisione per stato
     pianificato = relazioni.filter(stato='pianificato').select_related('user')
@@ -97,7 +97,7 @@ def training_plan_detail(request, pk):
 
 
 class TrainingPlanCreateView(CreateView):
-    model = TrainingPlan
+    model = Course
     form_class = TrainingPlanForm
     template_name = 'web_app/training_plan_create.html'
 
@@ -108,7 +108,7 @@ class TrainingPlanCreateView(CreateView):
 
 
 class TrainingPlanUpdateView(UpdateView):
-    model = TrainingPlan
+    model = Course
     form_class = TrainingPlanForm
     template_name = 'web_app/training_plan_update.html'
 
@@ -119,7 +119,7 @@ class TrainingPlanUpdateView(UpdateView):
 
 
 class TrainingPlanDeleteView(DeleteView):
-    model = TrainingPlan
+    model = Course
     template_name = 'web_app/training_plan_delete.html'
 
     def get_success_url(self):
@@ -130,7 +130,7 @@ class TrainingPlanDeleteView(DeleteView):
 def planned_completed_update(request, pk):
     users = CustomUser.objects.filter(user_type='persona')
 
-    training_plan = get_object_or_404(TrainingPlan, pk=pk)
+    training_plan = get_object_or_404(Course, pk=pk)
 
     if request.path.__contains__('planned'):
         stato_corrente = 'pianificato'
@@ -139,7 +139,7 @@ def planned_completed_update(request, pk):
 
     # Ottieni tutti gli utenti con lo stato corrente
     utenti_in_relazione = Relazione.objects.filter(
-        training_plan=training_plan, stato=stato_corrente
+        course=training_plan, stato=stato_corrente
     ).values_list('user_id', flat=True)
 
     if request.method == "POST":
@@ -151,17 +151,17 @@ def planned_completed_update(request, pk):
             # Aggiungi utenti nuovi (che non sono già in relazione)
             for user in users_selected:
                 if not Relazione.objects.filter(
-                    training_plan=training_plan, user=user, stato=stato_corrente
+                    course=training_plan, user=user, stato=stato_corrente
                 ).exists():
                     Relazione.objects.create(
-                        training_plan=training_plan, user=user, stato=stato_corrente
+                        course=training_plan, user=user, stato=stato_corrente
                     )
 
             # Rimuovi utenti deselezionati (che sono in relazione ma non nel form)
             for user_id in utenti_in_relazione:
                 if user_id not in [user.id for user in users_selected]:
                     Relazione.objects.filter(
-                        training_plan=training_plan, user_id=user_id, stato=stato_corrente
+                        course=training_plan, user_id=user_id, stato=stato_corrente
                     ).delete()
 
             messages.success(request, f'Utenti {stato_corrente} modificati con successo!')
@@ -195,7 +195,7 @@ def search(request):
             cost = form.cleaned_data.get("cost")
             requirement = form.cleaned_data.get("requirement")
 
-            training_plans = TrainingPlan.objects.all()
+            training_plans = Course.objects.all()
             if course_n:
                 training_plans = training_plans.filter(course_n__iexact=course_n)
             if course:

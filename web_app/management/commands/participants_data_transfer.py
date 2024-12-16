@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 import pyodbc
-from web_app.models import Relazione, TrainingPlan, CustomUser
+from web_app.models import Relazione, Course, CustomUser
 
 """
 Transfers entries from sql server table Participants to sqlite3 table (model) Relazione. 
@@ -54,7 +54,7 @@ class Command(BaseCommand):
         # Migrazione dei dati
         for row in data:
             try:
-                training_plan_instance = TrainingPlan.objects.get(id=row.TrainingPlan_id - 206)
+                training_plan_instance = Course.objects.get(id=row.TrainingPlan_id - 206)
                 custom_user_instance = CustomUser.objects.get(id=name_id_map[row.Participant])
 
                 relazione = Relazione(

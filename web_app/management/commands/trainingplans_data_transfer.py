@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 import pyodbc
-from web_app.models import TrainingPlan
+from web_app.models import Course
 
 """
 Transfers entries from sql server table TrainingPlans to sqlite3 table (model) TrainingPlan. 
@@ -37,7 +37,7 @@ class Command(BaseCommand):
         # Migrazione dei dati
         for row in data:
             try:
-                training_plan = TrainingPlan(
+                training_plan = Course(
                     file_year=row.FILE_YEAR,
                     course_n=row.COURSE_N,
                     course=row.COURSE,

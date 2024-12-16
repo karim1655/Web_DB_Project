@@ -13,10 +13,10 @@ class CustomUser(AbstractUser):
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
 
 
-class TrainingPlan(models.Model):
+class Course(models.Model):
     year = models.IntegerField(null=True, blank=True)
     course_n = models.CharField(max_length=255, null=True, blank=True)
-    course = models.TextField(null=True, blank=True)
+    course_name = models.TextField(null=True, blank=True)
     planned_date = models.DateTimeField(null=True, blank=True)
     effective_date = models.DateTimeField(null=True, blank=True)
     type = models.CharField(max_length=255, null=True, blank=True)
@@ -30,11 +30,7 @@ class TrainingPlan(models.Model):
     requirement = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.id} - {self.course}"
-
-    class Meta:
-        verbose_name = "Training Plan"
-        verbose_name_plural = "Training Plans"
+        return f"{self.id} - {self.course_name}"
 
 
 class Relazione(models.Model):
@@ -43,14 +39,14 @@ class Relazione(models.Model):
         ('completato', 'Completato'),
     )
 
-    training_plan = models.ForeignKey(TrainingPlan, on_delete=models.CASCADE, related_name='corsi_relazione')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='corsi_relazione')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='persone_relazione')
     stato = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     def __str__(self):
-        return f"{self.user.username} - {self.training_plan.id} ({self.stato})"
+        return f"{self.user.username} - {self.course.id} ({self.stato})"
 
     class Meta:
         verbose_name = "Relazione"
         verbose_name_plural = "Relazioni"
-        unique_together = ('training_plan', 'user', 'stato')
+        unique_together = ('course', 'user', 'stato')
