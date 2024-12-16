@@ -14,8 +14,8 @@ from .models import CustomUser, Course, Attendance
 
 def home(request):
     if request.user.is_authenticated:
-        planned = Course.objects.filter(courses_attendances__user=request.user, courses_attendances__stato="planned").order_by('-effective_date', '-planned_date')
-        completed = Course.objects.filter(courses_attendances__user=request.user, courses_attendances__stato="completed").order_by('-effective_date', '-planned_date')
+        planned = Course.objects.filter(courses_attendances__user=request.user, courses_attendances__state="planned").order_by('-effective_date', '-planned_date')
+        completed = Course.objects.filter(courses_attendances__user=request.user, courses_attendances__state="completed").order_by('-effective_date', '-planned_date')
     else:
         planned = None
         completed = None
@@ -84,9 +84,9 @@ def course_detail(request, pk):
     # Query per ottenere le attendances associate al corso
     attendances = Attendance.objects.filter(course=course)
 
-    # Suddivisione per stato
-    pianificato = attendances.filter(stato='planned').select_related('user')
-    completato = attendances.filter(stato='completed').select_related('user')
+    # Suddivisione per state
+    pianificato = attendances.filter(state='planned').select_related('user')
+    completato = attendances.filter(state='completed').select_related('user')
 
     context = {
         'course': course,
@@ -133,13 +133,13 @@ def planned_completed_update(request, pk):
     course = get_object_or_404(Course, pk=pk)
 
     if request.path.__contains__('planned'):
-        stato_corrente = 'planned'
+        state_corrente = 'planned'
     else:
-        stato_corrente = 'completed'
+        state_corrente = 'completed'
 
-    # Ottieni tutti gli utenti con lo stato corrente
+    # Ottieni tutti gli utenti con lo state corrente
     users_in_attendance = Attendance.objects.filter(
-        course=course, stato=stato_corrente
+        course=course, state=state_corrente
     ).values_list('user_id', flat=True)
 
     if request.method == "POST":
@@ -151,27 +151,27 @@ def planned_completed_update(request, pk):
             # Aggiungi utenti nuovi (che non sono già in attendance)
             for user in users_selected:
                 if not Attendance.objects.filter(
-                    course=course, user=user, stato=stato_corrente
+                    course=course, user=user, state=state_corrente
                 ).exists():
                     Attendance.objects.create(
-                        course=course, user=user, stato=stato_corrente
+                        course=course, user=user, state=state_corrente
                     )
 
             # Rimuovi utenti deselezionati (che sono in attendance ma non nel form)
             for user_id in users_in_attendance:
                 if user_id not in [user.id for user in users_selected]:
                     Attendance.objects.filter(
-                        course=course, user_id=user_id, stato=stato_corrente
+                        course=course, user_id=user_id, state=state_corrente
                     ).delete()
 
-            messages.success(request, f'Utenti {stato_corrente} modificati con successo!')
+            messages.success(request, f'Utenti {state_corrente} modificati con successo!')
 
             return redirect('course_detail', pk=course.pk)
     else:
         # Precompila il form con gli utenti selezionati
         form = UpdateAttendanceForm(initial={'users': users_in_attendance})
 
-    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {stato_corrente}'})
+    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {state_corrente}'})
 
 
 def search(request):

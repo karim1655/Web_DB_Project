@@ -41,10 +41,10 @@ class Attendance(models.Model):
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='courses_attendances')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users_attendances')
-    stato = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    state = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     def __str__(self):
-        return f"{self.user.username} - {self.course.id} ({self.stato})"
+        return f"{self.user.username} - {self.course.id} ({self.state})"
 
     class Meta:
-        unique_together = ('course', 'user', 'stato')
+        unique_together = ('course', 'user', 'state')
