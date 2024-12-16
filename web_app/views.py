@@ -6,16 +6,16 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateRelazioneForm, SearchForm
-from .models import CustomUser, Course, Relazione
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm
+from .models import CustomUser, Course, Attendance
 
 
 # Create your views here.
 
 def home(request):
     if request.user.is_authenticated:
-        planned = Course.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="pianificato").order_by('-effective_date', '-planned_date')
-        completed = Course.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="completato").order_by('-effective_date', '-planned_date')
+        planned = Course.objects.filter(courses_attendances__user=request.user, courses_attendances__stato="planned").order_by('-effective_date', '-planned_date')
+        completed = Course.objects.filter(courses_attendances__user=request.user, courses_attendances__stato="completed").order_by('-effective_date', '-planned_date')
     else:
         planned = None
         completed = None
@@ -81,12 +81,12 @@ class CoursesListView(ListView):
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
 
-    # Query per ottenere le relazioni associate al training plan
-    relazioni = Relazione.objects.filter(course=course)
+    # Query per ottenere le attendances associate al corso
+    attendances = Attendance.objects.filter(course=course)
 
     # Suddivisione per stato
-    pianificato = relazioni.filter(stato='pianificato').select_related('user')
-    completato = relazioni.filter(stato='completato').select_related('user')
+    pianificato = attendances.filter(stato='planned').select_related('user')
+    completato = attendances.filter(stato='completed').select_related('user')
 
     context = {
         'course': course,
@@ -128,39 +128,39 @@ class CourseDeleteView(DeleteView):
 
 
 def planned_completed_update(request, pk):
-    users = CustomUser.objects.filter(user_type='persona')
+    users = CustomUser.objects.filter(user_type='person')
 
     course = get_object_or_404(Course, pk=pk)
 
     if request.path.__contains__('planned'):
-        stato_corrente = 'pianificato'
+        stato_corrente = 'planned'
     else:
-        stato_corrente = 'completato'
+        stato_corrente = 'completed'
 
     # Ottieni tutti gli utenti con lo stato corrente
-    utenti_in_relazione = Relazione.objects.filter(
+    users_in_attendance = Attendance.objects.filter(
         course=course, stato=stato_corrente
     ).values_list('user_id', flat=True)
 
     if request.method == "POST":
-        form = UpdateRelazioneForm(request.POST)
+        form = UpdateAttendanceForm(request.POST)
         if form.is_valid():
             # Ottieni gli utenti selezionati dal form
             users_selected = form.cleaned_data['users']
 
-            # Aggiungi utenti nuovi (che non sono già in relazione)
+            # Aggiungi utenti nuovi (che non sono già in attendance)
             for user in users_selected:
-                if not Relazione.objects.filter(
+                if not Attendance.objects.filter(
                     course=course, user=user, stato=stato_corrente
                 ).exists():
-                    Relazione.objects.create(
+                    Attendance.objects.create(
                         course=course, user=user, stato=stato_corrente
                     )
 
-            # Rimuovi utenti deselezionati (che sono in relazione ma non nel form)
-            for user_id in utenti_in_relazione:
+            # Rimuovi utenti deselezionati (che sono in attendance ma non nel form)
+            for user_id in users_in_attendance:
                 if user_id not in [user.id for user in users_selected]:
-                    Relazione.objects.filter(
+                    Attendance.objects.filter(
                         course=course, user_id=user_id, stato=stato_corrente
                     ).delete()
 
@@ -169,7 +169,7 @@ def planned_completed_update(request, pk):
             return redirect('course_detail', pk=course.pk)
     else:
         # Precompila il form con gli utenti selezionati
-        form = UpdateRelazioneForm(initial={'users': utenti_in_relazione})
+        form = UpdateAttendanceForm(initial={'users': users_in_attendance})
 
     return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {stato_corrente}'})
 

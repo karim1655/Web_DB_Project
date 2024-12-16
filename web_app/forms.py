@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import CustomUser, Course, Relazione
+from .models import CustomUser, Course, Attendance
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -32,7 +32,7 @@ class CourseForm(forms.ModelForm):
             'effective_date': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
         }
 
-class UpdateRelazioneForm(forms.Form):
+class UpdateAttendanceForm(forms.Form):
     users = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         widget=forms.CheckboxSelectMultiple,

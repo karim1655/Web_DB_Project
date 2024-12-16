@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
-        ('persona', 'Persona'),
+        ('person', 'Persona'),
         ('quality_manager', 'Quality Manager'),
     )
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
@@ -33,20 +33,18 @@ class Course(models.Model):
         return f"{self.id} - {self.course_name}"
 
 
-class Relazione(models.Model):
+class Attendance(models.Model):
     STATUS_CHOICES = (
-        ('pianificato', 'Pianificato'),
-        ('completato', 'Completato'),
+        ('planned', 'Pianificato'),
+        ('completed', 'Completato'),
     )
 
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='corsi_relazione')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='persone_relazione')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='courses_attendances')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users_attendances')
     stato = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     def __str__(self):
         return f"{self.user.username} - {self.course.id} ({self.stato})"
 
     class Meta:
-        verbose_name = "Relazione"
-        verbose_name_plural = "Relazioni"
         unique_together = ('course', 'user', 'stato')
