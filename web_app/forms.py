@@ -23,7 +23,7 @@ class CustomUserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['user_type'].label = "Cambia ruolo"
 
-class TrainingPlanForm(forms.ModelForm):
+class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = '__all__'

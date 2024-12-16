@@ -30,15 +30,15 @@ urlpatterns = [
     path('passwordchange/<int:pk>', views.CustomPasswordChangeView.as_view(), name='password_change'),
 
     path('', views.home, name='home'),
-    path('trainingplans', views.TrainingPlansListView.as_view(), name='training_plans'),
+    path('courses', views.CoursesListView.as_view(), name='courses'),
 
-    path('trainingplandetail/<int:pk>/', views.training_plan_detail, name='training_plan_detail'),
-    path('trainingplancreate', views.TrainingPlanCreateView.as_view(), name='training_plan_create'),
-    path('trainingplanupdate/<int:pk>/', views.TrainingPlanUpdateView.as_view(), name='training_plan_update'),
-    path('trainingplandelete/<int:pk>/', views.TrainingPlanDeleteView.as_view(), name='training_plan_delete'),
+    path('coursedetail/<int:pk>/', views.course_detail, name='course_detail'),
+    path('coursecreate', views.CourseCreateView.as_view(), name='course_create'),
+    path('courseupdate/<int:pk>/', views.CourseUpdateView.as_view(), name='course_update'),
+    path('coursedelete/<int:pk>/', views.CourseDeleteView.as_view(), name='course_delete'),
 
-    path('trainingplanupdate/<int:pk>/plannedupdate', views.planned_completed_update, name='planned_update'),
-    path('trainingplanupdate/<int:pk>/completedupdate', views.planned_completed_update, name='completed_update'),
+    path('courseupdate/<int:pk>/plannedupdate', views.planned_completed_update, name='planned_update'),
+    path('courseupdate/<int:pk>/completedupdate', views.planned_completed_update, name='completed_update'),
 
     path('search', views.search, name='search'),
 ]

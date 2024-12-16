@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, TrainingPlanForm, UpdateRelazioneForm, SearchForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateRelazioneForm, SearchForm
 from .models import CustomUser, Course, Relazione
 
 
@@ -70,67 +70,67 @@ class CustomPasswordChangeView(PasswordChangeView):
         return reverse("user_detail", kwargs={'pk': pk})
 
 
-class TrainingPlansListView(ListView):
+class CoursesListView(ListView):
     model = Course
-    template_name = "web_app/training_plans_list.html"
+    template_name = "web_app/courses_list.html"
 
     def get_queryset(self):
         return Course.objects.order_by('-year', '-effective_date', '-planned_date')
 
 
-def training_plan_detail(request, pk):
-    training_plan = get_object_or_404(Course, pk=pk)
+def course_detail(request, pk):
+    course = get_object_or_404(Course, pk=pk)
 
     # Query per ottenere le relazioni associate al training plan
-    relazioni = Relazione.objects.filter(course=training_plan)
+    relazioni = Relazione.objects.filter(course=course)
 
     # Suddivisione per stato
     pianificato = relazioni.filter(stato='pianificato').select_related('user')
     completato = relazioni.filter(stato='completato').select_related('user')
 
     context = {
-        'training_plan': training_plan,
+        'course': course,
         'pianificato_users': [rel.user for rel in pianificato],
         'completato_users': [rel.user for rel in completato],
     }
-    return render(request, 'web_app/training_plan_detail.html', context)
+    return render(request, 'web_app/course_detail.html', context)
 
 
-class TrainingPlanCreateView(CreateView):
+class CourseCreateView(CreateView):
     model = Course
-    form_class = TrainingPlanForm
-    template_name = 'web_app/training_plan_create.html'
+    form_class = CourseForm
+    template_name = 'web_app/course_create.html'
 
 
     def get_success_url(self):
         messages.success(self.request, 'Corso creato con successo!')
-        return reverse('training_plans')
+        return reverse('courses')
 
 
-class TrainingPlanUpdateView(UpdateView):
+class CourseUpdateView(UpdateView):
     model = Course
-    form_class = TrainingPlanForm
-    template_name = 'web_app/training_plan_update.html'
+    form_class = CourseForm
+    template_name = 'web_app/course_update.html'
 
     def get_success_url(self):
         pk = self.kwargs.get("pk")
         messages.success(self.request, 'Corso modificato con successo!')
-        return reverse('training_plan_detail', kwargs={'pk': pk})
+        return reverse('course_detail', kwargs={'pk': pk})
 
 
-class TrainingPlanDeleteView(DeleteView):
+class CourseDeleteView(DeleteView):
     model = Course
-    template_name = 'web_app/training_plan_delete.html'
+    template_name = 'web_app/course_delete.html'
 
     def get_success_url(self):
         messages.success(self.request, 'Corso eliminato con successo!')
-        return reverse('training_plans')
+        return reverse('courses')
 
 
 def planned_completed_update(request, pk):
     users = CustomUser.objects.filter(user_type='persona')
 
-    training_plan = get_object_or_404(Course, pk=pk)
+    course = get_object_or_404(Course, pk=pk)
 
     if request.path.__contains__('planned'):
         stato_corrente = 'pianificato'
@@ -139,7 +139,7 @@ def planned_completed_update(request, pk):
 
     # Ottieni tutti gli utenti con lo stato corrente
     utenti_in_relazione = Relazione.objects.filter(
-        course=training_plan, stato=stato_corrente
+        course=course, stato=stato_corrente
     ).values_list('user_id', flat=True)
 
     if request.method == "POST":
@@ -151,27 +151,27 @@ def planned_completed_update(request, pk):
             # Aggiungi utenti nuovi (che non sono già in relazione)
             for user in users_selected:
                 if not Relazione.objects.filter(
-                    course=training_plan, user=user, stato=stato_corrente
+                    course=course, user=user, stato=stato_corrente
                 ).exists():
                     Relazione.objects.create(
-                        course=training_plan, user=user, stato=stato_corrente
+                        course=course, user=user, stato=stato_corrente
                     )
 
             # Rimuovi utenti deselezionati (che sono in relazione ma non nel form)
             for user_id in utenti_in_relazione:
                 if user_id not in [user.id for user in users_selected]:
                     Relazione.objects.filter(
-                        course=training_plan, user_id=user_id, stato=stato_corrente
+                        course=course, user_id=user_id, stato=stato_corrente
                     ).delete()
 
             messages.success(request, f'Utenti {stato_corrente} modificati con successo!')
 
-            return redirect('training_plan_detail', pk=training_plan.pk)
+            return redirect('course_detail', pk=course.pk)
     else:
         # Precompila il form con gli utenti selezionati
         form = UpdateRelazioneForm(initial={'users': utenti_in_relazione})
 
-    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'training_plan': training_plan, 'persone': users, 'title': f'Aggiorna {stato_corrente}'})
+    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {stato_corrente}'})
 
 
 def search(request):
@@ -181,7 +181,7 @@ def search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             course_n = form.cleaned_data.get("course_n")
-            course = form.cleaned_data.get("course")
+            course_name = form.cleaned_data.get("course_name")
             year = form.cleaned_data.get("year")
             planned_date = form.cleaned_data.get("planned_date")
             effective_date = form.cleaned_data.get("effective_date")
@@ -195,41 +195,41 @@ def search(request):
             cost = form.cleaned_data.get("cost")
             requirement = form.cleaned_data.get("requirement")
 
-            training_plans = Course.objects.all()
+            courses = Course.objects.all()
             if course_n:
-                training_plans = training_plans.filter(course_n__iexact=course_n)
-            if course:
-                training_plans = training_plans.filter(course__icontains=course)
+                courses = courses.filter(course_n__iexact=course_n)
+            if course_name:
+                courses = courses.filter(course_name__icontains=course_name)
             if year:
-                training_plans = training_plans.filter(year__iexact=year)
+                courses = courses.filter(year__iexact=year)
             if planned_date:
-                training_plans = training_plans.filter(planned_date__date=planned_date)
+                courses = courses.filter(planned_date__date=planned_date)
             if effective_date:
-                training_plans = training_plans.filter(effective_date__date=effective_date)
+                courses = courses.filter(effective_date__date=effective_date)
             if type:
-                training_plans = training_plans.filter(type__iexact=type)
+                courses = courses.filter(type__iexact=type)
             if start:
-                training_plans = training_plans.filter(start__icontains=start)
+                courses = courses.filter(start__icontains=start)
             if check_review:
-                training_plans = training_plans.filter(check_review__icontains=check_review)
+                courses = courses.filter(check_review__icontains=check_review)
             if end:
-                training_plans = training_plans.filter(end__icontains=end)
+                courses = courses.filter(end__icontains=end)
             if duration:
-                training_plans = training_plans.filter(duration__lte=duration)
+                courses = courses.filter(duration__lte=duration)
             if i_e:
-                training_plans = training_plans.filter(i_e__iexact=i_e)
+                courses = courses.filter(i_e__iexact=i_e)
             if trainer:
-                training_plans = training_plans.filter(trainer__icontains=trainer)
+                courses = courses.filter(trainer__icontains=trainer)
             if cost:
-                training_plans = training_plans.filter(cost__lte=cost)
+                courses = courses.filter(cost__lte=cost)
             if requirement:
-                training_plans = training_plans.filter(requirement__icontains=requirement)
+                courses = courses.filter(requirement__icontains=requirement)
 
-            training_plans = training_plans.order_by('-year', '-effective_date', '-planned_date')
+            courses = courses.order_by('-year', '-effective_date', '-planned_date')
 
             ctx = {
                 'form': form,
-                'training_plans': training_plans,
+                'courses': courses,
             }
 
     return render(request, 'web_app/search.html', ctx)
