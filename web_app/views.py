@@ -75,7 +75,7 @@ class TrainingPlansListView(ListView):
     template_name = "web_app/training_plans_list.html"
 
     def get_queryset(self):
-        return TrainingPlan.objects.order_by('-year')   # aggiungi course_n
+        return TrainingPlan.objects.order_by('-year', '-effective_date', '-planned_date')
 
 
 def training_plan_detail(request, pk):
@@ -225,7 +225,7 @@ def search(request):
             if requirement:
                 training_plans = training_plans.filter(requirement__icontains=requirement)
 
-            training_plans = training_plans.order_by("-year")
+            training_plans = training_plans.order_by('-year', '-effective_date', '-planned_date')
 
             ctx = {
                 'form': form,
