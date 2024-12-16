@@ -13,7 +13,15 @@ from .models import CustomUser, TrainingPlan, Relazione
 # Create your views here.
 
 def home(request):
-    return render(request, 'web_app/home.html', context={'title': 'Home', })
+    if request.user.is_authenticated:
+        planned = TrainingPlan.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="pianificato").order_by('-effective_date', '-planned_date')
+        completed = TrainingPlan.objects.filter(corsi_relazione__user=request.user, corsi_relazione__stato="completato").order_by('-effective_date', '-planned_date')
+    else:
+        planned = None
+        completed = None
+    #print(planned)
+    #print(completed)
+    return render(request, 'web_app/home.html', context={'title': 'Home', 'planned': planned, 'completed': completed})
 
 
 def register(request):
