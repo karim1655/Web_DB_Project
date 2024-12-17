@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
+from django.db.models import Q
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
@@ -134,7 +135,7 @@ class CourseDeleteView(QualityManagerRequiredMixin, DeleteView):
 
 @quality_manager_required
 def planned_completed_update(request, pk):
-    users = CustomUser.objects.filter(user_type='person')
+    users = CustomUser.objects.filter(Q(user_type='person') | Q(user_type='quality_manager'))
 
     course = get_object_or_404(Course, pk=pk)
 
@@ -242,11 +243,6 @@ def search(request):
 
 @login_required
 def upload_file(request, pk):
-    attendances = Attendance.objects.filter(user_id=request.user.id, course_id=pk)
-    if attendances.count() == 0:
-        messages.error(request, 'Bisogna aver pianificato o completato il corso per poter caricare dei file')
-        return redirect('course_detail', pk=pk)
-
     if request.method == 'POST' and request.FILES.get('uploaded_file'):
         uploaded_file = request.FILES['uploaded_file']
         File.objects.create(user_id=request.user.id, course_id=pk, file=uploaded_file)
