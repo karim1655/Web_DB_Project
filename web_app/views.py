@@ -140,13 +140,15 @@ def planned_completed_update(request, pk):
     course = get_object_or_404(Course, pk=pk)
 
     if request.path.__contains__('planned'):
-        state_corrente = 'planned'
+        current_state = 'planned'
+        stato = 'Pianificato'
     else:
-        state_corrente = 'completed'
+        current_state = 'completed'
+        stato = 'Completato'
 
     # Ottieni tutti gli utenti con lo state corrente
     users_in_attendance = Attendance.objects.filter(
-        course=course, state=state_corrente
+        course=course, state=current_state
     ).values_list('user_id', flat=True)
 
     if request.method == "POST":
@@ -158,27 +160,27 @@ def planned_completed_update(request, pk):
             # Aggiungi utenti nuovi (che non sono già in attendance)
             for user in users_selected:
                 if not Attendance.objects.filter(
-                    course=course, user=user, state=state_corrente
+                    course=course, user=user, state=current_state
                 ).exists():
                     Attendance.objects.create(
-                        course=course, user=user, state=state_corrente
+                        course=course, user=user, state=current_state
                     )
 
             # Rimuovi utenti deselezionati (che sono in attendance ma non nel form)
             for user_id in users_in_attendance:
                 if user_id not in [user.id for user in users_selected]:
                     Attendance.objects.filter(
-                        course=course, user_id=user_id, state=state_corrente
+                        course=course, user_id=user_id, state=current_state
                     ).delete()
 
-            messages.success(request, f'Utenti {state_corrente} modificati con successo!')
+            messages.success(request, f'Utenti {current_state} modificati con successo!')
 
             return redirect('course_detail', pk=course.pk)
     else:
         # Precompila il form con gli utenti selezionati
         form = UpdateAttendanceForm(initial={'users': users_in_attendance})
 
-    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {state_corrente}'})
+    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {stato}'})
 
 
 def search(request):
