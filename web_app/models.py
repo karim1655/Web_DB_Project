@@ -42,9 +42,20 @@ class Attendance(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='courses_attendances')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users_attendances')
     state = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    posted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.course.id} ({self.state})"
 
     class Meta:
         unique_together = ('course', 'user', 'state')
+
+
+class File(models.Model):
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='files_uploaded')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='files_courses')
+
+    def __str__(self):
+        return f"user: {self.user.username} - course_id: {self.course.id} - file_id: {self.file}"
