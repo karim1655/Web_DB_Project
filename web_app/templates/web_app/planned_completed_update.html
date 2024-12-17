@@ -7,20 +7,44 @@
 <br>
   <form method="post">
     {% csrf_token %}
+    <div>
+      <button type="button" class="btn btn-sm btn-light" onclick="selectAll()">Seleziona tutto</button>
+      <button type="button" class="btn btn-sm btn-light" onclick="deselectAll()">Deseleziona tutto</button>
+    </div>
+<br>
     {% for field in form %}
       <div>
         <label for="{{ field.id_for_label }}">
           {% for user in persone %}
-            <input type="checkbox" name="{{ field.name }}" value="{{ user.id }}" {% if user.id in field.value %} checked {% endif %}>
+            <input type="checkbox" name="{{ field.name }}" value="{{ user.id }}" id="user_{{ user.id }}" {% if user.id in field.value %} checked {% endif %}>
             {{ user.first_name }} {{ user.last_name }}<br>
           {% endfor %}
         </label>
       </div>
     {% endfor %}
+
   <br><br>
 
     <button type="submit" class="btn btn-primary">Aggiorna</button>
     <a href="{% url 'course_detail' course.pk %}" class="btn btn-secondary">Annulla</a>
   </form>
+
+  <script>
+    // Funzione per selezionare tutte le checkbox
+    function selectAll() {
+      let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(function(checkbox) {
+        checkbox.checked = true;
+      });
+    }
+
+    // Funzione per deselezionare tutte le checkbox
+    function deselectAll() {
+      let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+      });
+    }
+  </script>
 
 {% endblock %}
