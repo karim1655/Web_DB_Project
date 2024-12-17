@@ -7,7 +7,7 @@ from django.views.generic import CreateView, DetailView, UpdateView, DeleteView,
 from django.contrib import messages
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm
-from .models import CustomUser, Course, Attendance
+from .models import CustomUser, Course, Attendance, File
 
 
 # Create your views here.
@@ -81,6 +81,8 @@ class CoursesListView(ListView):
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
 
+    files = File.objects.filter(user_id=request.user.id, course=pk).order_by('-uploaded_at')
+
     # Query per ottenere le attendances associate al corso
     attendances = Attendance.objects.filter(course=course)
 
@@ -92,6 +94,7 @@ def course_detail(request, pk):
         'course': course,
         'pianificato_users': [rel.user for rel in pianificato],
         'completato_users': [rel.user for rel in completato],
+        'files': files,
     }
     return render(request, 'web_app/course_detail.html', context)
 
@@ -233,3 +236,16 @@ def search(request):
             }
 
     return render(request, 'web_app/search.html', ctx)
+
+
+def upload_file(request, pk):
+    attendances = Attendance.objects.filter(user_id=request.user.id, course_id=pk)
+    if attendances.count() == 0:
+        messages.error(request, 'Bisogna aver pianificato o completato il corso per poter caricare dei file')
+        return redirect('course_detail', pk=pk)
+
+    if request.method == 'POST' and request.FILES.get('uploaded_file'):
+        uploaded_file = request.FILES['uploaded_file']
+        File.objects.create(user_id=request.user.id, course_id=pk, file=uploaded_file)
+        messages.success(request, 'File caricato con successo!')
+    return redirect('course_detail', pk=pk)
