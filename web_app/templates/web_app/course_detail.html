@@ -18,7 +18,6 @@
             </a>
         </div>
 
-
     <div class="mb-4">
         {% if user.is_authenticated %}
             {% if not current_user_planned.id %}
@@ -44,15 +43,15 @@
         {% else %}
             <h4> Esegui il <a href="{% url 'login' %}">login</a> per segnare le tue presenze e per caricare file relativi al corso.</h4>
         {% endif %}
-
     </div>
 
-
     <div class="row mb-4">
-    <div class="col-md-6">
-        <ul class="list-group list-group-flush">
-            <!-- Dettagli del corso -->
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="col-md-6">
+            <!-- Aggiunto bordo, angoli arrotondati e padding per la lista -->
+            <div class="course-details-list p-3 border rounded shadow-sm">
+                <ul class="list-group list-group-flush">
+                    <!-- Dettagli del corso -->
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Anno:</strong>
                         <span class="badge rounded-pill bg-info">{{ course.year }}</span>
                     </li>
@@ -100,60 +99,56 @@
                         <strong>Requisiti:</strong>
                         <span class="badge rounded-pill bg-light text-dark">{{ course.requirement }}</span>
                     </li>
-        </ul>
-    </div>
-
-    {% if user.is_authenticated %}
-    <!-- Caricamento file -->
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h4 class="card-title">Caricamento File</h4>
-
-                <!-- Form per il caricamento dei file -->
-                <form method="post" enctype="multipart/form-data" action="{% url 'upload_file' course.id %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <!-- <label for="fileUpload" class="form-label">Seleziona un file</label> -->
-                        <input type="file" class="form-control" id="fileUpload" name="uploaded_file" required>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">
-                        <i class="bi bi-upload"></i> Carica File
-                    </button>
-                </form>
+                </ul>
             </div>
         </div>
 
-        <!-- Lista dei file caricati -->
-        <div class="mt-4">
-            <h5>File Caricati</h5>
-            {% if files %}
-                <ul class="list-group">
-                    {% for file in files %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <a href="{{ file.file.url }}" target="_blank">{{ file.file.url|slice:"15:" }}</a>
-                            </div>
-                            <form method="post" action="{% url 'delete_file' course.id file.id %}" style="margin: 0;">
-                            {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-trash"></i> Elimina
-                                </button>
-                            </form>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-muted">Nessun file caricato.</p>
-            {% endif %}
+        {% if user.is_authenticated %}
+        <!-- Caricamento file -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Caricamento File</h4>
+
+                    <!-- Form per il caricamento dei file -->
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_file' course.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input type="file" class="form-control" id="fileUpload" name="uploaded_file" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-upload"></i> Carica File
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista dei file caricati -->
+            <div class="mt-4">
+                <h5>File Caricati</h5>
+                {% if files %}
+                    <ul class="list-group">
+                        {% for file in files %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{{ file.file.url }}" target="_blank">{{ file.file.url|slice:"15:" }}</a>
+                                </div>
+                                <form method="post" action="{% url 'delete_file' course.id file.id %}" style="margin: 0;">
+                                {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Elimina
+                                    </button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Nessun file caricato.</p>
+                {% endif %}
+            </div>
         </div>
+        {% endif %}
     </div>
-</div>
-    {% endif %}
-
-
-
-
 
     {% if request.user.user_type == 'quality_manager' %}
         <br>
@@ -229,4 +224,23 @@
         </div>
     </div>
     {% endif %}
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .course-details-list {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .course-details-list .list-group-item {
+            border: none;
+            padding: 10px;
+            background-color: #fff;
+        }
+        .course-details-list .badge {
+            font-size: 0.875rem;
+        }
+    </style>
 {% endblock %}
