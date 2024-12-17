@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import render, redirect, get_object_or_404
@@ -88,17 +87,22 @@ def course_detail(request, pk):
     files = File.objects.filter(user_id=request.user.id, course=pk).order_by('-uploaded_at')
 
     # Query per ottenere le attendances associate al corso
-    attendances = Attendance.objects.filter(course=course)
-
+    attendances = Attendance.objects.filter(course_id=pk)
     # Suddivisione per state
-    pianificato = attendances.filter(state='planned').select_related('user')
-    completato = attendances.filter(state='completed').select_related('user')
+    planned = attendances.filter(state='planned').select_related('user')
+    completed = attendances.filter(state='completed').select_related('user')
+
+    # Attendances dell'utente corrente per questo corso, per poterle rimuovere se vuole
+    current_user_planned = attendances.filter(state='planned', user_id=request.user.id).first()
+    current_user_completed = attendances.filter(state='completed', user_id=request.user.id).first()
 
     context = {
         'course': course,
-        'pianificato_users': [rel.user for rel in pianificato],
-        'completato_users': [rel.user for rel in completato],
+        'planned_users': [attendance.user for attendance in planned],
+        'completed_users': [attendance.user for attendance in completed],
         'files': files,
+        'current_user_planned': current_user_planned,
+        'current_user_completed': current_user_completed,
     }
     return render(request, 'web_app/course_detail.html', context)
 
@@ -264,3 +268,41 @@ def delete_file(request, pk, file_id):
 
         messages.success(request, "File eliminato con successo.")
         return redirect('course_detail', pk)
+
+
+@login_required
+def add_planned_or_completed_attendance(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    user = get_object_or_404(CustomUser, id=request.user.id)
+
+    if request.path.__contains__('planned'):
+        if Attendance.objects.filter(course=course, user=user, state='planned').exists():
+            messages.warning(request, "Hai già una presenza pianificata per questo corso.")
+        else:
+            Attendance.objects.create(course=course, user=user, state='planned')
+            messages.success(request, "Presenza pianificata aggiunta con successo!")
+    elif request.path.__contains__('completed'):
+        if Attendance.objects.filter(course=course, user=user, state='completed').exists():
+            messages.warning(request, "Hai già una presenza completata per questo corso.")
+        else:
+            Attendance.objects.create(course=course, user=user, state='completed')
+            messages.success(request, "Presenza completata aggiunta con successo!")
+
+    return redirect('course_detail', pk=course.id)
+
+
+@login_required
+def remove_planned_or_completed_attendance(request, course_id, attendance_id):
+    attendance = get_object_or_404(Attendance, id=attendance_id)
+
+    if attendance_id == -1:
+        messages.warning('Non si può rimuovere una presenza che non esiste')
+
+    attendance.delete()
+
+    if request.path.__contains__('planned'):
+        messages.success(request, "Presenza pianificata rimossa con successo!")
+    else:
+        messages.success(request, "Presenza completata rimossa con successo!")
+
+    return redirect('course_detail', pk=course_id)

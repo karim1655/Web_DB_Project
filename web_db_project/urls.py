@@ -48,6 +48,11 @@ urlpatterns = [
 
     path('coursedetail/<int:pk>/uploadfile', views.upload_file, name='upload_file'),
     path('coursedetail/<int:pk>/deletefile/<int:file_id>/', views.delete_file, name='delete_file'),
+
+    path('coursedetail/<int:course_id>/addplannedattendance', views.add_planned_or_completed_attendance, name='add_planned_attendance'),
+    path('coursedetail/<int:course_id>/addcompletedattendance', views.add_planned_or_completed_attendance, name='add_completed_attendance'),
+    path('coursedetail/<int:course_id>/removeplannedattendance/<int:attendance_id>/', views.remove_planned_or_completed_attendance, name='remove_planned_attendance'),
+    path('coursedetail/<int:course_id>/removecompletedattendance/<int:attendance_id>/', views.remove_planned_or_completed_attendance, name='remove_completed_attendance'),
 ]
 
 
