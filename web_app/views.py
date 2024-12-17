@@ -6,9 +6,11 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm
 from .models import CustomUser, Course, Attendance, File
+from .decorators import quality_manager_required, QualityManagerRequiredMixin
 
 
 # Create your views here.
@@ -100,7 +102,7 @@ def course_detail(request, pk):
     return render(request, 'web_app/course_detail.html', context)
 
 
-class CourseCreateView(CreateView):
+class CourseCreateView(QualityManagerRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
     template_name = 'web_app/course_create.html'
@@ -111,7 +113,7 @@ class CourseCreateView(CreateView):
         return reverse('courses')
 
 
-class CourseUpdateView(UpdateView):
+class CourseUpdateView(QualityManagerRequiredMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'web_app/course_update.html'
@@ -122,7 +124,7 @@ class CourseUpdateView(UpdateView):
         return reverse('course_detail', kwargs={'pk': pk})
 
 
-class CourseDeleteView(DeleteView):
+class CourseDeleteView(QualityManagerRequiredMixin, DeleteView):
     model = Course
     template_name = 'web_app/course_delete.html'
 
@@ -130,7 +132,7 @@ class CourseDeleteView(DeleteView):
         messages.success(self.request, 'Corso eliminato con successo!')
         return reverse('courses')
 
-
+@quality_manager_required
 def planned_completed_update(request, pk):
     users = CustomUser.objects.filter(user_type='person')
 
@@ -238,7 +240,7 @@ def search(request):
 
     return render(request, 'web_app/search.html', ctx)
 
-
+@login_required
 def upload_file(request, pk):
     attendances = Attendance.objects.filter(user_id=request.user.id, course_id=pk)
     if attendances.count() == 0:
@@ -251,7 +253,7 @@ def upload_file(request, pk):
         messages.success(request, 'File caricato con successo!')
     return redirect('course_detail', pk=pk)
 
-
+@login_required
 def delete_file(request, pk, file_id):
     if request.method == "POST":
         file_instance = get_object_or_404(File, id=file_id)
