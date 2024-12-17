@@ -42,7 +42,7 @@
             </a>
             {% endif %}
         {% else %}
-            <h4> Esegui il <a href="{% url 'login' %}">login</a> per segnare le tue presenze</h4>
+            <h4> Esegui il <a href="{% url 'login' %}">login</a> per segnare le tue presenze e per caricare file relativi al corso.</h4>
         {% endif %}
 
     </div>
@@ -103,6 +103,7 @@
         </ul>
     </div>
 
+    {% if user.is_authenticated %}
     <!-- Caricamento file -->
     <div class="col-md-6">
         <div class="card shadow-sm">
@@ -148,6 +149,7 @@
         </div>
     </div>
 </div>
+    {% endif %}
 
 
 

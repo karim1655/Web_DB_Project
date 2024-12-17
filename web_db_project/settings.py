@@ -34,7 +34,7 @@ AUTH_USER_MODEL = 'web_app.CustomUser'
 
 # Login redirect
 LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login'
+LOGIN_URL = '/login/?auth=notok'
 
 
 # Application definition

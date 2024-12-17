@@ -3,6 +3,13 @@
 {% block title %}Accedi - Web Database{% endblock %}
 
 {% block content %}
+
+{% if 'notok' in request.GET.auth %}
+    <div class="alert alert-danger" role="alert">
+        Devi eseguire il login per utilizzare tale funzionalità.
+    </div>
+{% endif %}
+
 <div class="container my-5">
     <h2 class="text-center mb-4">Accedi al tuo account</h2>
 
