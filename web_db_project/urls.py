@@ -46,7 +46,8 @@ urlpatterns = [
 
     path('search', views.search, name='search'),
 
-    path('coursedetail/<int:pk>/uploadfile', views.upload_file, name='upload_file')
+    path('coursedetail/<int:pk>/uploadfile', views.upload_file, name='upload_file'),
+    path('coursedetail/<int:pk>/deletefile/<int:file_id>/', views.delete_file, name='delete_file'),
 ]
 
 

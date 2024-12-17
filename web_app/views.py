@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
+from django.http import HttpResponseForbidden
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm
 from .models import CustomUser, Course, Attendance, File
@@ -249,3 +250,17 @@ def upload_file(request, pk):
         File.objects.create(user_id=request.user.id, course_id=pk, file=uploaded_file)
         messages.success(request, 'File caricato con successo!')
     return redirect('course_detail', pk=pk)
+
+
+def delete_file(request, pk, file_id):
+    if request.method == "POST":
+        file_instance = get_object_or_404(File, id=file_id)
+
+        if file_instance.user != request.user:
+            return HttpResponseForbidden("Non sei autorizzato a eliminare questo file.")
+
+        file_instance.file.delete(save=False)  # Rimuove il file dal filesystem
+        file_instance.delete()  # Rimuove la entry dal database
+
+        messages.success(request, "File eliminato con successo.")
+        return redirect('course_detail', pk)

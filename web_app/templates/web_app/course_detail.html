@@ -111,8 +111,15 @@
                 <ul class="list-group">
                     {% for file in files %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{{ file.file.url }}" target="_blank">{{ file.file.url|slice:"15:" }}</a>
-                            <span class="badge bg-secondary">{{ file.uploaded_at|date:'d-m-Y H:i' }}</span>
+                            <div>
+                                <a href="{{ file.file.url }}" target="_blank">{{ file.file.url|slice:"15:" }}</a>
+                            </div>
+                            <form method="post" action="{% url 'delete_file' course.id file.id %}" style="margin: 0;">
+                            {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Elimina
+                                </button>
+                            </form>
                         </li>
                     {% endfor %}
                 </ul>
