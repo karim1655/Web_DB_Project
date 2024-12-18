@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Dashboard</h1>
+    <br>
+
+<!-- Form per la selezione dell'utente -->
+<form method="get" action="{% url 'dashboard' %}" class="row g-2 align-items-center">
+    <div class="col-auto">
+        {{ form.user.label_tag }}
+    </div>
+    <div class="col-auto">
+        {{ form.user }}
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Filtra</button>
+    </div>
+</form>
+
+    <br><br>
+<div class="container">
+        <div class="row">
+            <!-- Colonna dei corsi pianificati -->
+            <div class="col-lg-6">
+                <h3 class="mb-4 text-center">Corsi Pianificati</h3>
+                {% regroup planned|dictsortreversed:"year" by year as planned_by_year %}
+                <div class="accordion mb-4" id="plannedAccordion">
+                    {% for group in planned_by_year %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="planned-heading-{{ group.grouper }}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#planned-collapse-{{ group.grouper }}" aria-expanded="true" aria-controls="planned-collapse-{{ group.grouper }}">
+                                    Anno: {{ group.grouper }}
+                                </button>
+                            </h2>
+                            <div id="planned-collapse-{{ group.grouper }}" class="accordion-collapse collapse show" aria-labelledby="planned-heading-{{ group.grouper }}">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        {% for course in group.list %}
+                                            <div class="col-lg-6 col-md-6 mb-4">
+                                                <!-- Card cliccabile -->
+                                                <a href="{% url 'course_detail' course.id %}" class="card h-100 shadow-sm text-decoration-none">
+                                                    <div class="card-body d-flex flex-column">
+                                                        <h5 class="card-title" style="color: rgb(0, 71, 171);">
+                                                            {{ course.course_n }} - {{ course.course_name|truncatewords:10 }}
+                                                        </h5>
+                                                        <p class="card-text">
+                                                            Anno: <span class="badge rounded-pill bg-info">{{ course.year }}</span><br>
+                                                            Data Pianificata: <span class="badge rounded-pill bg-warning">{{ course.planned_date|date:'d-m-Y, H:i' }}</span><br>
+                                                            Data Effettiva: <span class="badge rounded-pill bg-success">{{ course.effective_date|date:'d-m-Y, H:i' }}</span><br>
+                                                        </p>
+                                                        <div class="mt-auto">
+                                                            <button class="btn btn-sm btn-outline-dark w-100">Visualizza Dettagli</button>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Colonna dei corsi completati -->
+            <div class="col-lg-6">
+                <h3 class="mb-4 text-center">Corsi Completati</h3>
+                {% regroup completed|dictsortreversed:"year" by year as completed_by_year %}
+                <div class="accordion mb-4" id="completedAccordion">
+                    {% for group in completed_by_year %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="completed-heading-{{ group.grouper }}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#completed-collapse-{{ group.grouper }}" aria-expanded="true" aria-controls="completed-collapse-{{ group.grouper }}">
+                                    Anno: {{ group.grouper }}
+                                </button>
+                            </h2>
+                            <div id="completed-collapse-{{ group.grouper }}" class="accordion-collapse collapse show" aria-labelledby="completed-heading-{{ group.grouper }}">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        {% for course in group.list %}
+                                            <div class="col-lg-6 col-md-6 mb-4">
+                                                <!-- Card cliccabile -->
+                                                <a href="{% url 'course_detail' course.id %}" class="card h-100 shadow-sm text-decoration-none">
+                                                    <div class="card-body d-flex flex-column">
+                                                        <h5 class="card-title" style="color: rgb(0, 71, 171);">
+                                                            {{ course.course_n }} - {{ course.course_name|truncatewords:10 }}
+                                                        </h5>
+                                                        <p class="card-text">
+                                                            Anno: <span class="badge rounded-pill bg-info">{{ course.year }}</span><br>
+                                                            Data Pianificata: <span class="badge rounded-pill bg-warning">{{ course.planned_date|date:'d-m-Y, H:i' }}</span>
+                                                            Data Effettiva: <span class="badge rounded-pill bg-success">{{ course.effective_date|date:'d-m-Y, H:i' }}</span>
+                                                        </p>
+                                                        <div class="mt-auto">
+                                                            <button class="btn btn-sm btn-outline-dark w-100">Visualizza Dettagli</button>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

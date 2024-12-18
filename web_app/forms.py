@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from .models import CustomUser, Course, Attendance
+from django.db.models import Q
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -80,3 +81,11 @@ class SearchForm(forms.Form):
         i_e_choices = [(i_e, i_e) for i_e in Course.objects.all().values_list("i_e", flat=True).distinct().exclude(i_e__isnull=True)]
         self.fields['i_e'].choices = [("", "Tutti")] + i_e_choices
 
+
+class CustomUserFilterForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=CustomUser.objects.filter(Q(user_type='person') | Q(user_type='quality_manager')),
+        required=False,
+        label="Seleziona Utente",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )

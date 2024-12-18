@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
-from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm
+from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm, CustomUserFilterForm
 from .models import CustomUser, Course, Attendance, File
 from .decorators import quality_manager_required, QualityManagerRequiredMixin
 
@@ -308,3 +308,25 @@ def remove_planned_or_completed_attendance(request, course_id, attendance_id):
         messages.success(request, "Presenza completata rimossa con successo!")
 
     return redirect('course_detail', pk=course_id)
+
+@login_required
+@quality_manager_required
+def dashboard(request):
+    # Inizializza il form con i dati inviati tramite GET
+    form = CustomUserFilterForm(request.GET or None)
+
+    planned = []
+    completed = []
+
+    if form.is_valid():
+        user = form.cleaned_data.get('user')
+        if user:
+            planned = Course.objects.filter(courses_attendances__user=user, courses_attendances__state="planned").order_by('-effective_date', '-planned_date')
+            completed = Course.objects.filter(courses_attendances__user=user, courses_attendances__state="completed").order_by('-effective_date', '-planned_date')
+
+    context = {
+        'form': form,
+        'planned': planned,
+        'completed': completed,
+    }
+    return render(request, 'web_app/dashboard.html', context)

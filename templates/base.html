@@ -30,6 +30,11 @@
                     <li class="nav-item">
                         <a class="btn btn-light" href="{% url 'home' %}">Home</a>
                     </li>
+                    {% if user.user_type == 'quality_manager' or user.is_superuser %}
+                        <li class="nav-item">
+                        <a class="btn btn-light" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="btn btn-light" href="{% url 'courses' %}">Tutti i Corsi</a>
                     </li>

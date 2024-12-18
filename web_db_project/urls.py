@@ -53,6 +53,8 @@ urlpatterns = [
     path('coursedetail/<int:course_id>/addcompletedattendance', views.add_planned_or_completed_attendance, name='add_completed_attendance'),
     path('coursedetail/<int:course_id>/removeplannedattendance/<int:attendance_id>/', views.remove_planned_or_completed_attendance, name='remove_planned_attendance'),
     path('coursedetail/<int:course_id>/removecompletedattendance/<int:attendance_id>/', views.remove_planned_or_completed_attendance, name='remove_completed_attendance'),
+
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
 
 
