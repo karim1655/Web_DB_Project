@@ -33,10 +33,6 @@ pipenv install -r requirements.txt
 ```
 python manage.py migrate
 ```
-### Crea il superutente per accedere alla console admin (facoltativo)
-```
-python manage.py createsuperuser
-```
 ### Avvia il server di sviluppo
 ```
 python manage.py runserver
