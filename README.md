@@ -18,16 +18,12 @@ pip install pipenv
 ```
 ### Crea ambiente virtuale
 ```
-pipenv install
+pipenv install -r requirements.txt
 ```
-Questo comando creerà un nuovo ambiente virtuale e installerà tutte le dipendenze elencate nel file Pipfile (se presente). Altrimenti pipenv creerà un ambiente vuoto.
+Questo comando creerà un nuovo ambiente virtuale e installerà tutte le dipendenze elencate nel file requirements.txt (se presente). Altrimenti pipenv creerà un ambiente vuoto.
 ### Attiva ambiente virtuale
 ```
 pipenv shell
-```
-### Installa le dipendenze
-```
-pipenv install -r requirements.txt
 ```
 ### Esegui le migrazioni per il database
 ```
