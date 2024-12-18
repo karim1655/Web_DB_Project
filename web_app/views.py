@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -107,7 +108,7 @@ def course_detail(request, pk):
     return render(request, 'web_app/course_detail.html', context)
 
 
-class CourseCreateView(QualityManagerRequiredMixin, CreateView):
+class CourseCreateView(QualityManagerRequiredMixin, LoginRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
     template_name = 'web_app/course_create.html'
@@ -118,7 +119,7 @@ class CourseCreateView(QualityManagerRequiredMixin, CreateView):
         return reverse('courses')
 
 
-class CourseUpdateView(QualityManagerRequiredMixin, UpdateView):
+class CourseUpdateView(QualityManagerRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'web_app/course_update.html'
@@ -249,9 +250,10 @@ def search(request):
 
 @login_required
 def upload_file(request, pk):
-    if request.method == 'POST' and request.FILES.get('uploaded_file'):
-        uploaded_file = request.FILES['uploaded_file']
-        File.objects.create(user_id=request.user.id, course_id=pk, file=uploaded_file)
+    if request.method == 'POST' and request.FILES.get('file'):
+        uploaded_file = request.FILES['file']
+        file = File.objects.create(user_id=request.user.id, course_id=pk, file=uploaded_file)
+        file.save()
         messages.success(request, 'File caricato con successo!')
     return redirect('course_detail', pk=pk)
 
