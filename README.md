@@ -62,7 +62,7 @@ python manage.py runserver
 e inserisci nuovamente http://localhost:8000 in un qualunque browser.
 
 ## Testing
-Per eseguire i test posizionati con il terminale nella cartella top lever di progetto ed esegui:
+Per eseguire i test, posizionati con il terminale nella cartella top lever di progetto ed esegui:
 ```
 python manage.py test
 ```
