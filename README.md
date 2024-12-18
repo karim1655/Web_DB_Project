@@ -2,8 +2,7 @@
 
 ## Requisiti
 - Python 3.12
-- Django 5.1.2
-- virtual environment
+- Git
 
 ## Installazione
 ### Clona il repository ed entra nella cartella top-level di progetto
