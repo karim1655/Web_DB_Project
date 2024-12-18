@@ -4,7 +4,7 @@
 - Python 3.12
 - Git
 
-## Installazione
+## Installazione (Windows e MacOS)
 ### Clona il repository ed entra nella cartella top-level di progetto
 ```
 git clone https://github.com/karim1655/Web_DB_Project.git
