@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import CustomUserCreationForm, CustomUserUpdateForm, CourseForm, UpdateAttendanceForm, SearchForm, CustomUserFilterForm
 from .models import CustomUser, Course, Attendance, File
-from .decorators import quality_manager_required, QualityManagerRequiredMixin
+from .decorators import quality_manager_required, superuser_required, QualityManagerRequiredMixin
 
 
 # Create your views here.
@@ -330,3 +330,27 @@ def dashboard(request):
         'completed': completed,
     }
     return render(request, 'web_app/dashboard.html', context)
+
+
+@superuser_required
+def manage_users(request, pk):
+    if request.method == "POST":
+        for user in CustomUser.objects.all():
+            is_superuser = request.POST.get(f"is_superuser_{user.id}") == "True"
+            is_staff = request.POST.get(f"is_staff_{user.id}") == "True"
+            user_type = request.POST.get(f"user_type_{user.id}")
+
+            # Aggiorna l'utente
+            user.is_superuser = is_superuser
+            user.is_staff = is_staff
+            user.user_type = user_type
+            user.save()
+
+        messages.success(request, "Permessi modificati con successo!")
+        return redirect("manage_users", pk)
+
+    users = CustomUser.objects.all()
+    return render(request, "web_app/manage_users.html", {
+        "users": users,
+        "user_type_choices": CustomUser.USER_TYPE_CHOICES,
+    })

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-3">Gestione Utenti</h1>
+
+    <form method="post" class="card shadow-sm p-3">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-striped">
+                <thead class="thead-light">
+                    <tr class="text-center">
+                        <th>Nome</th>
+                        <th>Superutente</th>
+                        <th>Staff</th>
+                        <th>Tipo Utente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td class="text-center">
+                            <select class="form-select form-select-sm" name="is_superuser_{{ user.id }}">
+                                <option value="False" {% if not user.is_superuser %}selected{% endif %}>No</option>
+                                <option value="True" {% if user.is_superuser %}selected{% endif %}>Sì</option>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <select class="form-select form-select-sm" name="is_staff_{{ user.id }}">
+                                <option value="False" {% if not user.is_staff %}selected{% endif %}>No</option>
+                                <option value="True" {% if user.is_staff %}selected{% endif %}>Sì</option>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <select class="form-select form-select-sm" name="user_type_{{ user.id }}">
+                                {% if user_type_choices %}
+                                    {% for value, label in user_type_choices %}
+                                    <option value="{{ value }}" {% if user.user_type == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option disabled>Scelte non disponibili</option>
+                                {% endif %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary">Salva modifiche</button>
+            <a href="{% url 'user_detail' user.id %}" class="btn btn-secondary">Torna indietro</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -32,6 +32,7 @@ urlpatterns = [
     path('userdetail/<int:pk>/', views.CustomUserDetailView.as_view(), name='user_detail'),
     path('userupdate/<int:pk>/', views.CustomUserUpdateView.as_view(), name='user_update'),
     path('passwordchange/<int:pk>', views.CustomPasswordChangeView.as_view(), name='password_change'),
+    path("userdetail/<int:pk>/manage-users/", views.manage_users, name="manage_users"),
 
     path('', views.home, name='home'),
     path('courses', views.CoursesListView.as_view(), name='courses'),
@@ -55,6 +56,7 @@ urlpatterns = [
     path('coursedetail/<int:course_id>/removecompletedattendance/<int:attendance_id>/', views.remove_planned_or_completed_attendance, name='remove_completed_attendance'),
 
     path('dashboard/', views.dashboard, name='dashboard'),
+
 ]
 
 
