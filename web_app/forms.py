@@ -8,21 +8,29 @@ from django.db.models import Q
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'user_type', )
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['user_type'].label = "Registrati come"
-
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.user_type = 'person'
+        if commit:
+            user.save()
+        return user
 
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'first_name', 'last_name', 'email', 'user_type')
+        fields = ('username', 'first_name', 'last_name', 'email')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['user_type'].label = "Cambia ruolo"
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # Mantieni invariato il valore di user_type
+        if self.instance.pk:  # L'utente esiste già (aggiornamento)
+            user.user_type = self.instance.user_type
+        if commit:
+            user.save()
+        return user
+
 
 class CourseForm(forms.ModelForm):
     class Meta:
