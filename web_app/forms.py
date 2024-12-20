@@ -50,7 +50,7 @@ class UpdateAttendanceForm(forms.Form):
 
 class SearchForm(forms.Form):
     course_n = forms.IntegerField(required=False, label="Numero Corso")
-    course = forms.CharField(required=False, max_length=200, label="Nome Corso")
+    course_name = forms.CharField(required=False, max_length=200, label="Nome Corso")
     year  = forms.ChoiceField(
         required=False,
         choices= [],
