@@ -16,10 +16,10 @@
             <p><strong>Cognome:</strong> {{ user.last_name }}</p>
             <p><strong>Username:</strong> {{ user.username }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
-            {% if user.user_type == 'person' %}
-            <p><strong>Tipo Utente:</strong> Persona</p>
+            {% if user.user_type == 'employee' %}
+            <p><strong>Tipo Utente:</strong> Dipendente</p>
             {% else %}
-            <p><strong>Tipo Utente:</strong> Quality manager</p>
+            <p><strong>Tipo Utente:</strong> Quality Manager</p>
             {% endif %}
         </div>
     </div>

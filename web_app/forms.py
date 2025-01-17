@@ -12,7 +12,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.user_type = 'person'
+        user.user_type = 'employee'
         if commit:
             user.save()
         return user
@@ -92,7 +92,7 @@ class SearchForm(forms.Form):
 
 class CustomUserFilterForm(forms.Form):
     user = forms.ModelChoiceField(
-        queryset=CustomUser.objects.filter(Q(user_type='person') | Q(user_type='quality_manager')),
+        queryset=CustomUser.objects.filter(Q(user_type='employee') | Q(user_type='quality_manager')),
         required=False,
         label="Seleziona Utente",
         widget=forms.Select(attrs={'class': 'form-control'})

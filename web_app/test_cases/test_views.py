@@ -15,7 +15,7 @@ class ViewTests(TestCase):
             username='testuser',
             password='pAssWord123',
             email='testuser@example.com',
-            user_type='person'
+            user_type='employee'
         )
 
         # Creazione di un Quality Manager
@@ -114,7 +114,7 @@ class FilesTests(TestCase):
             username='testuser',
             password='pAssWord123',
             email='testuser@example.com',
-            user_type='person'
+            user_type='employee'
         )
 
         # Creazione di un corso
@@ -197,7 +197,7 @@ class ViewTests1(TestCase):
     def setUp(self):
         # Creazione di utenti con ruoli diversi
         self.quality_manager = CustomUser.objects.create_user(username="manager", password="password", user_type="quality_manager")
-        self.person = CustomUser.objects.create_user(username="person", password="password", user_type="person")
+        self.employee = CustomUser.objects.create_user(username="employee", password="password", user_type="employee")
 
         # Creazione di un corso
         self.course = Course.objects.create(course_name="Test Course", )
@@ -209,7 +209,7 @@ class ViewTests1(TestCase):
 
     def test_access_denied_for_unauthorized_users(self):
         """Test che verifica che gli utenti senza permessi non possano accedere a views protette."""
-        self.client.login(username="person", password="password")
+        self.client.login(username="employee", password="password")
         response = self.client.get(reverse("course_delete", args=[self.course.id]))
         self.assertEqual(response.status_code, 403)  # Accesso negato
 
@@ -228,7 +228,7 @@ class ViewTests1(TestCase):
 
     def test_role_specific_behavior(self):
         """Test che verifica che solo determinati ruoli possano accedere a specifiche funzionalità."""
-        self.client.login(username="person", password="password")
+        self.client.login(username="employee", password="password")
         response = self.client.get(reverse("course_create"))
         self.assertEqual(response.status_code, 403)  # Accesso negato
 

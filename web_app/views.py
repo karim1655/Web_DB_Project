@@ -140,7 +140,7 @@ class CourseDeleteView(QualityManagerRequiredMixin, DeleteView):
 
 @quality_manager_required
 def planned_completed_update(request, pk):
-    users = CustomUser.objects.filter(Q(user_type='person') | Q(user_type='quality_manager'))
+    users = CustomUser.objects.filter(Q(user_type='employee') | Q(user_type='quality_manager'))
 
     course = get_object_or_404(Course, pk=pk)
 
@@ -185,7 +185,7 @@ def planned_completed_update(request, pk):
         # Precompila il form con gli utenti selezionati
         form = UpdateAttendanceForm(initial={'users': users_in_attendance})
 
-    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'persone': users, 'title': f'Aggiorna {stato}'})
+    return render(request, 'web_app/planned_completed_update.html', {'form': form, 'course': course, 'dipendenti': users, 'title': f'Aggiorna {stato}'})
 
 
 def search(request):

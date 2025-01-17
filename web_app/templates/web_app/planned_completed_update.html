@@ -15,7 +15,7 @@
     {% for field in form %}
       <div>
         <label for="{{ field.id_for_label }}">
-          {% for user in persone %}
+          {% for user in dipendenti %}
             <input type="checkbox" name="{{ field.name }}" value="{{ user.id }}" id="user_{{ user.id }}" {% if user.id in field.value %} checked {% endif %}>
             {{ user.first_name }} {{ user.last_name }}<br>
           {% endfor %}
