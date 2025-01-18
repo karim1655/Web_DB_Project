@@ -29,7 +29,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="planned-heading-{{ group.grouper }}">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#planned-collapse-{{ group.grouper }}" aria-expanded="true" aria-controls="planned-collapse-{{ group.grouper }}">
-                                    Anno: {{ group.grouper }}
+                                    Anno: {{ group.grouper }} &nbsp; ({{ group.list|length }} corsi)
                                 </button>
                             </h2>
                             <div id="planned-collapse-{{ group.grouper }}" class="accordion-collapse collapse show" aria-labelledby="planned-heading-{{ group.grouper }}">
@@ -72,7 +72,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="completed-heading-{{ group.grouper }}">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#completed-collapse-{{ group.grouper }}" aria-expanded="true" aria-controls="completed-collapse-{{ group.grouper }}">
-                                    Anno: {{ group.grouper }}
+                                    Anno: {{ group.grouper }} &nbsp; ({{ group.list|length }} corsi)
                                 </button>
                             </h2>
                             <div id="completed-collapse-{{ group.grouper }}" class="accordion-collapse collapse show" aria-labelledby="completed-heading-{{ group.grouper }}">
