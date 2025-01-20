@@ -250,8 +250,8 @@ def search(request):
 
 @login_required
 def upload_file(request, pk):
-    if request.method == 'POST' and request.FILES.get('file'):
-        uploaded_file = request.FILES['file']
+    if request.method == 'POST' and request.FILES.get('uploaded_file'):
+        uploaded_file = request.FILES['uploaded_file']
         file = File.objects.create(user_id=request.user.id, course_id=pk, file=uploaded_file)
         file.save()
         messages.success(request, 'File caricato con successo!')
