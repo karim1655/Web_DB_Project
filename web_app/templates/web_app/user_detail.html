@@ -30,7 +30,7 @@
             <a href="{% url 'password_change' user.id %}" class="btn btn-warning me-2">Modifica Password</a>
         </div>
         {% if user.user_type == 'quality_manager' %}
-        <a href="{% url 'manage_users' user.id %}" class="btn btn-primary">Gestione permessi</a>
+        <a href="{% url 'manage_users' user.id %}" class="btn btn-primary">Gestione Permessi</a>
         {% endif %}
     </div>
 </div>
