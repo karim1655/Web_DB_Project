@@ -332,7 +332,7 @@ def dashboard(request):
     return render(request, 'web_app/dashboard.html', context)
 
 
-@superuser_required
+@quality_manager_required
 def manage_users(request, pk):
     if request.method == "POST":
         for user in CustomUser.objects.all():
