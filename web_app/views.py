@@ -47,12 +47,12 @@ class CustomLoginView(LoginView):
 class CustomLogoutView(LogoutView):
     template_name = 'registration/logged_out.html'
 
-class CustomUserDetailView(DetailView):
+class CustomUserDetailView(LoginRequiredMixin, DetailView):
     model = CustomUser
     template_name = 'web_app/user_detail.html'
 
 
-class CustomUserUpdateView(UpdateView):
+class CustomUserUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     template_name = 'web_app/user_update.html'
     form_class = CustomUserUpdateForm
@@ -64,7 +64,7 @@ class CustomUserUpdateView(UpdateView):
         return reverse("user_detail", kwargs={'pk': pk})
 
 
-class CustomPasswordChangeView(PasswordChangeView):
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'registration/password_change.html'
 
     def get_success_url(self):
